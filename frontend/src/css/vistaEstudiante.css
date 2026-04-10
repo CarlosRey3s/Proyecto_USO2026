@@ -5,7 +5,7 @@
 body, html {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f4f7f9;
+  background: #F7F9F9;
   width: 100%;
   overflow-x: hidden;
 }
@@ -19,8 +19,8 @@ body, html {
 /* Sidebar */
 .sidebar {
   width: 230px;
-  background: #03223F;
-  color: white;
+  background: #22806B;
+  color: #FFFFFF;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -32,6 +32,7 @@ body, html {
 
 .sidebar .menu h3 {
   margin-bottom: 20px;
+  color: #FACB4B;
 }
 
 .sidebar ul {
@@ -49,16 +50,18 @@ body, html {
 
 .sidebar li.active,
 .sidebar li:hover {
-  background: #2B879E;
+  background: #FACB4B;
+  color: #22806B;
 }
 
+/* Footer sidebar */
 .sidebar-bottom {
   padding: 15px;
-  background: #02182c;
+  background: #1B5E52;
   font-size: 14px;
 }
 
-/* Content FULL WIDTH */
+/* Content */
 .content {
   flex: 1;
   display: flex;
@@ -67,12 +70,13 @@ body, html {
 
 /* Navbar */
 .navbar {
-  background: #2B879E;
-  color: white;
+  background: #FFFFFF;
+  color: #22806B;
   padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 2px solid #FACB4B;
 }
 
 /* Search */
@@ -81,9 +85,9 @@ body, html {
   border-radius: 20px;
   padding: 5px 15px;
   width: 200px;
-  border: none;
+  border: 1px solid #FACB4B;
   outline: none;
-  color: #03223F;
+  color: #22806B;
 }
 
 /* Main */
@@ -102,33 +106,36 @@ body, html {
   background: #FFFFFF;
   border-radius: 15px;
   padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 2px solid #FACB4B;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 /* Tabs */
 .tabs {
   display: flex;
   gap: 8px;
-  background: #eaf3f5;
+  background: #FDF6E3;
   padding: 5px;
   border-radius: 20px;
+  flex-wrap: wrap;
 }
 
 .tab {
-  padding: 5px 12px;
+  padding: 6px 12px;
   border-radius: 15px;
   cursor: pointer;
   transition: 0.2s;
+  color: #22806B;
 }
 
 .tab.active {
-  background: #2B879E;
-  color: white;
+  background: #22806B;
+  color: #FFFFFF;
 }
 
 .tab:hover {
-  background: #54A56E;
-  color: white;
+  background: #FACB4B;
+  color: #22806B;
 }
 
 /* Right Panel */
@@ -145,18 +152,19 @@ body, html {
   background: #FFFFFF;
   padding: 15px;
   border-radius: 15px;
-  border-left: 5px solid #2B879E;
+  border-left: 6px solid #22806B;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: 0.2s;
 }
 
 .card:hover {
   transform: translateY(-3px);
+  border-left: 6px solid #FACB4B;
 }
 
-/* Texto verde */
+/* Texto destacado */
 .green {
-  color: #54A56E;
+  color: #AD868A;
   font-weight: bold;
 }
 

@@ -1,5 +1,6 @@
 import "../css/vistaEstudiante.css";
 
+
 export default function Dashboard() {
   return (
     <div className="container">
