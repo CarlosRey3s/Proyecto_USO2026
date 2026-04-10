@@ -85,26 +85,6 @@ export default function Dashboard() {
           {/* DERECHA */}
           <div className="right-panel">
 
-            {/* TUS HORARIOS */}
-            <div className="card">
-              <h4>Tus horarios:</h4>
-
-              <p><b>Física</b></p>
-              <p>Lun / Jue | 08:00 - 10:00</p>
-
-              <p><b>Lab Estática</b></p>
-              <p>Mar | 14:00 - 16:00</p>
-
-              <p><b>Sistemas Lineales Eléctricos</b></p>
-              <p>Mié | 08:00 - 10:00</p>
-
-              <p><b>Electrónica</b></p>
-              <p>Mié / Jue | Variable</p>
-
-              <p><b>Sistemas Digitales</b></p>
-              <p>Lun / Vie | Variable</p>
-            </div>
-
             {/* EVALUACIONES */}
             <div className="card">
               <h4>Evaluaciones pendientes:</h4>
