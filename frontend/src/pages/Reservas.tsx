@@ -1,9 +1,11 @@
 import "../css/reservas.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Reservas() {
 
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="container">
@@ -64,17 +66,17 @@ export default function Reservas() {
             <h2>Laboratorios</h2>
             <p>Selecciona un laboratorio para hacer una reserva:</p>
 
-            <div className="lab-card">
+            <div className="lab-card" onClick={() => setShowModal(true)}>
               <h3>Laboratorio L1</h3>
               <p>Instrumentos para prácticas físicas, estáticas, etc.</p>
             </div>
 
-            <div className="lab-card">
+            <div className="lab-card" onClick={() => setShowModal(true)}>
               <h3>Laboratorio L2</h3>
               <p>Instrumentos para prácticas físicas, estáticas, etc.</p>
             </div>
 
-            <div className="lab-card">
+            <div className="lab-card" onClick={() => setShowModal(true)}>
               <h3>Laboratorio L3</h3>
               <p>Instrumentos para prácticas físicas, estáticas, etc.</p>
             </div>
@@ -94,6 +96,73 @@ export default function Reservas() {
 
         </div>
       </div>
+
+      {/* 🔥 MODAL (NUEVO) */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+
+            <h2>Nueva Reserva</h2>
+
+            <div className="form-grid">
+
+              <div>
+                <label>Titulo</label>
+                <input type="text" />
+              </div>
+
+              <div>
+                <label>Mesa</label>
+                <select>
+                  <option>Mesa 1 - Disponible</option>
+                </select>
+              </div>
+
+              <div>
+                <label>Laboratorio</label>
+                <select>
+                  <option>L1</option>
+                </select>
+              </div>
+
+              <div>
+                <label>Fecha</label>
+                <input type="date" />
+              </div>
+
+              <div>
+                <label>Desde</label>
+                <input type="time" />
+              </div>
+
+              <div>
+                <label>Hasta</label>
+                <input type="time" />
+              </div>
+
+              <div>
+                <label>N° Estudiantes</label>
+                <input type="number" max="5" />
+              </div>
+
+            </div>
+
+            <textarea placeholder="Nota adicional"></textarea>
+
+            <div className="modal-buttons">
+              <button onClick={() => setShowModal(false)}>
+                Guardar
+              </button>
+
+              <button onClick={() => setShowModal(false)}>
+                Cancelar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

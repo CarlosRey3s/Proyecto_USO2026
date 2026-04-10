@@ -138,3 +138,96 @@ body, html {
 .reserva-card h4 {
   margin-bottom: 5px;
 }
+
+/* MODAL OVERLAY */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(222, 233, 230, 0.35);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* MODAL */
+.modal {
+  background: #FFFFFF;
+  padding: 25px;
+  border-radius: 15px;
+  width: 600px;
+  border-top: 6px solid #22806B;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* TITULO */
+.modal h2 {
+  color: #22806B;
+  margin-bottom: 15px;
+}
+
+/* GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* INPUTS (AQUÍ ESTÁ TU CAMBIO 🔥) */
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 8px;
+
+  background: #F9F3F4;        /* fondo suave */
+  border: 1px solid #AD868A;  /* TU COLOR */
+  color: #333;
+}
+
+/* FOCUS */
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus {
+  outline: none;
+  border: 1px solid #22806B;
+  background: #FFFFFF;
+}
+
+/* TEXTAREA */
+.modal textarea {
+  margin-top: 15px;
+  height: 80px;
+}
+
+/* BOTONES */
+.modal-buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+/* BOTÓN GUARDAR */
+.modal-buttons button:first-child {
+  background: #22806B;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* BOTÓN CANCELAR */
+.modal-buttons button:last-child {
+  background: #FACB4B;
+  color: #22806B;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}

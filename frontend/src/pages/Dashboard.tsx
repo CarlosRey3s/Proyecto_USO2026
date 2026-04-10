@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
 
-  // ✅ TIENE que ir dentro del componente
   const navigate = useNavigate();
 
   return (
@@ -17,7 +16,6 @@ export default function Dashboard() {
           <ul>
             <li className="active">Dashboard</li>
 
-            {/* 👇 AQUÍ EL CAMBIO */}
             <li onClick={() => navigate("/reservas")}>
               Reservar
             </li>
@@ -40,7 +38,10 @@ export default function Dashboard() {
         <div className="navbar">
           <h2>Dashboard</h2>
 
-          <input className="search-box" placeholder="🔍 Buscar..." />
+          <input 
+            className="search-box" 
+            placeholder="🔍 Buscar..." 
+          />
 
           <div>Hello, Name 🔔</div>
         </div>
@@ -48,7 +49,7 @@ export default function Dashboard() {
         {/* MAIN */}
         <div className="main">
 
-          {/* IZQUIERDA */}
+          {/* IZQUIERDA - HORARIOS */}
           <div className="schedule">
             <h3>Horarios de Laboratorios</h3>
 
@@ -61,22 +62,71 @@ export default function Dashboard() {
               <div className="tab">Viernes</div>
               <div className="tab">Sábado</div>
             </div>
+
+            {/* BLOQUES DE HORARIO */}
+            <div className="schedule-card">
+              <div className="time">08:00 - 10:00</div>
+              <div>
+                <strong>Física</strong>
+                <p>Lab 101</p>
+              </div>
+            </div>
+
+            <div className="schedule-card">
+              <div className="time">10:00 - 12:00</div>
+              <div>
+                <strong>Sistemas Digitales</strong>
+                <p>Lab 203</p>
+              </div>
+            </div>
+
           </div>
 
           {/* DERECHA */}
           <div className="right-panel">
 
+            {/* TUS HORARIOS */}
             <div className="card">
               <h4>Tus horarios:</h4>
+
+              <p><b>Física</b></p>
+              <p>Lun / Jue | 08:00 - 10:00</p>
+
               <p><b>Lab Estática</b></p>
-              <p>Lun | 08:00 am - 10:00 am</p>
+              <p>Mar | 14:00 - 16:00</p>
+
+              <p><b>Sistemas Lineales Eléctricos</b></p>
+              <p>Mié | 08:00 - 10:00</p>
+
+              <p><b>Electrónica</b></p>
+              <p>Mié / Jue | Variable</p>
+
+              <p><b>Sistemas Digitales</b></p>
+              <p>Lun / Vie | Variable</p>
             </div>
 
+            {/* EVALUACIONES */}
             <div className="card">
               <h4>Evaluaciones pendientes:</h4>
-              <p><b>Lab Estática</b></p>
-              <p>Evaluación 2</p>
-              <p className="green">Vence: 12 Oct 2026</p>
+
+              <div className="alert">
+                <p><b>Sistemas Digitales</b></p>
+                <p>- Examen Parcial</p>
+                <p className="red">Vence: 20 Oct (3 días)</p>
+              </div>
+
+              <div className="alert">
+                <p><b>Lab Estática</b></p>
+                <p>- Informe de Lab 3</p>
+                <p className="red">Vence: 22 Oct (5 días)</p>
+              </div>
+
+              <div className="alert">
+                <p><b>Física</b></p>
+                <p>- Quiz Capítulo 4</p>
+                <p className="red">Vence: 25 Oct (8 días)</p>
+              </div>
+
             </div>
 
           </div>
