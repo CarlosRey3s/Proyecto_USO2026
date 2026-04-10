@@ -1,4 +1,4 @@
-import "../styles.css";
+import "../css/vistaEstudiante.css";
 
 export default function Dashboard() {
   return (
@@ -30,7 +30,7 @@ export default function Dashboard() {
         <div className="navbar">
           <h2>Dashboard</h2>
 
-          <input className="search-box" placeholder="🔍" />
+          <input className="search-box" placeholder="🔍 Buscar..." />
 
           <div>Hello, Name 🔔</div>
         </div>
@@ -58,15 +58,15 @@ export default function Dashboard() {
 
             <div className="card">
               <h4>Tus horarios:</h4>
-              <p><b>Lab Estatica</b></p>
+              <p><b>Lab Estática</b></p>
               <p>Lun | 08:00 am - 10:00 am</p>
             </div>
 
             <div className="card">
               <h4>Evaluaciones pendientes:</h4>
               <p><b>Lab Estática</b></p>
-              <p>Evaluacion 2</p>
-              <p className="red">Vence: 12 Oct 2026</p>
+              <p>Evaluación 2</p>
+              <p className="green">Vence: 12 Oct 2026</p>
             </div>
 
           </div>
