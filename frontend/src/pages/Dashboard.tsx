@@ -1,7 +1,11 @@
 import "../css/vistaEstudiante.css";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+
+  // ✅ TIENE que ir dentro del componente
+  const navigate = useNavigate();
+
   return (
     <div className="container">
 
@@ -12,7 +16,12 @@ export default function Dashboard() {
 
           <ul>
             <li className="active">Dashboard</li>
-            <li>Reservar</li>
+
+            {/* 👇 AQUÍ EL CAMBIO */}
+            <li onClick={() => navigate("/reservas")}>
+              Reservar
+            </li>
+
             <li>Evaluaciones</li>
             <li>Mensajes</li>
             <li>Perfil</li>

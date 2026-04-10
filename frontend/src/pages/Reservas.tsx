@@ -1,19 +1,38 @@
 import "../css/reservas.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Reservas() {
+
+  const navigate = useNavigate();
+
   return (
     <div className="container">
 
       {/* SIDEBAR */}
       <div className="sidebar">
+        
         <div className="menu">
           <h3>Reservacion Estudiante</h3>
 
           <ul>
-            <li>Dashboard</li>
-            <li className="active">Reservar</li>
-            <li>Evaluaciones</li>
-            <li>Perfil</li>
+            <li onClick={() => navigate("/")}>
+              Dashboard
+            </li>
+
+            <li 
+              className="active"
+              onClick={() => navigate("/reservas")}
+            >
+              Reservar
+            </li>
+
+            <li onClick={() => navigate("/evaluaciones")}>
+              Evaluaciones
+            </li>
+
+            <li onClick={() => navigate("/perfil")}>
+              Perfil
+            </li>
           </ul>
         </div>
 
@@ -29,7 +48,10 @@ export default function Reservas() {
         <div className="navbar">
           <h2>Reservación</h2>
 
-          <input className="search-box" placeholder="🔍 Buscar..." />
+          <input 
+            className="search-box" 
+            placeholder="🔍 Buscar..." 
+          />
 
           <div>Hello, Name 🔔</div>
         </div>
