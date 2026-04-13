@@ -1,3 +1,15 @@
+:root {
+  --verde: #22806B;
+  --verde-oscuro: #1B5E52;
+  --verde-hover: #29967E;
+  --dorado: #FACB4B;
+  --rosado: #AD868A;
+  --blanco: #FFFFFF;
+  --gris: #F4F6F8;
+  --texto: #333;
+}
+
+/* RESET */
 * {
   box-sizing: border-box;
 }
@@ -5,271 +17,307 @@
 body, html {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #F7F9F9;
-  width: 100%;
-  overflow-x: hidden;
+  background: var(--gris);
+  color: var(--texto);
 }
 
-/* LAYOUT */
+/* ================= LAYOUT ================= */
 .container {
   display: flex;
   height: 100vh;
 }
 
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
 .sidebar {
-  width: 230px;
-  background: #22806B;
-  color: #FFFFFF;
+  width: 220px;
+  background: var(--blanco);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border-right: 1px solid #eee;
 }
 
-.sidebar .menu {
+.menu {
   padding: 20px;
 }
 
-.sidebar .menu h3 {
+.sidebar h3 {
   margin-bottom: 20px;
-  color: #FFFFFF;
+  color: var(--texto);
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .sidebar li {
-  padding: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
   cursor: pointer;
+  color: #000;
   transition: 0.2s;
-  color: #FFFFFF;
-  width: 100%;
 }
 
-.sidebar li.active,
+.sidebar li.active {
+  background: var(--dorado);
+  color: #000;
+  font-weight: bold;
+}
+
 .sidebar li:hover {
-  background: #29967E;
-  color: #FFFFFF;
+  background: #f1f1f1;
+  color: #000;
 }
 
-/* FOOTER SIDEBAR */
 .sidebar-bottom {
   padding: 15px;
-  background: #1B5E52;
   font-size: 14px;
-  color: #FFFFFF;
+  color: #777;
 }
 
-/* CONTENT */
+/* ================= CONTENT ================= */
 .content {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: transparent; /* 👈 IMPORTANTE */
 }
 
-/* NAVBAR */
+/* ================= NAVBAR ================= */
 .navbar {
-  background: #FFFFFF;
-  color: #22806B;
-  padding: 10px 20px;
+  background: var(--blanco);
+  padding: 12px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #FACB4B;
+  align-items: center;
+}
+
+.navbar h2 {
+  margin: 0;
+  color: #000;
 }
 
 /* SEARCH */
 .search-box {
-  background: #FFFFFF;
+  padding: 7px 15px;
   border-radius: 20px;
-  padding: 5px 15px;
-  width: 200px;
-  border: 1px solid #FACB4B;
+  border: 1px solid #ddd;
   outline: none;
-  color: #22806B;
 }
 
-/* MAIN */
+/* ================= MAIN (SIN CUADRO CENTRAL) ================= */
 .main {
   display: flex;
   gap: 20px;
   padding: 20px;
-  width: 100%;
-  align-items: flex-start;
+  background: transparent;
 }
 
-/* SCHEDULE */
+/* ================= SCHEDULE ================= */
 .schedule {
   flex: 3;
-  min-width: 0;
-  background: #FFFFFF;
-  border-radius: 15px;
-  padding: 20px;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background: transparent;
 }
 
-/* TABS */
-.tabs {
-  display: flex;
-  gap: 8px;
-  background: #FDF6E3;
-  padding: 5px;
-  border-radius: 20px;
-  flex-wrap: wrap;
-}
-
-.tab {
-  padding: 6px 12px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.2s;
-  color: #22806B;
-}
-
-.tab.active {
-  background: #22806B;
-  color: #FFFFFF;
-}
-
-.tab:hover {
-  background: #FACB4B;
-  color: #22806B;
-}
-
-/* RIGHT PANEL */
-.right-panel {
-  flex: 1;
-  min-width: 250px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* CARD GENERAL */
-.card {
-  background: #FFFFFF;
-  padding: 15px;
-  border-radius: 15px;
-  border-left: 6px solid #22806B;
-  transition: 0.25s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  border-left: 6px solid #FACB4B;
-  box-shadow: 0 10px 25px rgba(250, 203, 75, 0.25);
-}
-
-/* HORARIOS */
+/* TARJETAS HORARIO */
 .schedule-card {
   display: flex;
   align-items: center;
   gap: 15px;
-  background: #FFFFFF;
-  border-radius: 12px;
-  padding: 12px 15px;
-  margin-top: 12px;
-  border-left: 5px solid #22806B;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: 0.25s ease;
+
+  background: var(--blanco);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+
+  border: 1px solid #eee;
+  transition: 0.2s;
 }
 
 .schedule-card:hover {
   transform: translateY(-2px);
-  border-left: 5px solid #29967E;
+  border-left: 4px solid var(--dorado);
+  box-shadow: 0 10px 20px rgba(250, 203, 75, 0.15);
 }
 
-/* BURBUJA HORA */
+/* HORA */
 .time {
-  padding: 8px 12px;
-  border-radius: 20px;
-  background: #FFFFFF;
-  border: 2px solid #AD868A;
-  color: #22806B;
+  background: var(--blanco);
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--rosado);
   font-weight: bold;
-  min-width: 120px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(173, 134, 138, 0.25);
-  transition: 0.2s;
+  color: var(--verde);
 }
 
-.schedule-card:hover .time {
-  border-color: #29967E;
-  box-shadow: 0 4px 12px rgba(41, 150, 126, 0.25);
+/* ================= RIGHT PANEL ================= */
+.right-panel {
+  flex: 1;
+  background: transparent;
 }
 
-/* DIAS */
-.day {
-  background: #FFFFFF;
-  padding: 10px;
+/* CARD EVALUACIONES */
+.card {
+  background: var(--blanco);
+  padding: 15px;
   border-radius: 10px;
+  border-left: 4px solid var(--verde);
+}
+
+.card:hover {
+  border-left: 4px solid var(--dorado);
+}
+
+.alert {
+  margin-top: 10px;
+}
+
+.alert p {
+  margin: 0;
+  color: #000;
+}
+
+.red {
+  color: var(--rosado);
+  font-weight: bold;
+}
+
+/* ================= TABS ================= */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tab {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #eee;
+  cursor: pointer;
+  color: var(--verde);
+}
+
+.tab.active {
+  background: var(--verde);
+  color: white;
+}
+
+.tab:hover {
+  background: var(--dorado);
+  color: #000;
+}
+
+/* ================= LABS ================= */
+.labs {
+  flex: 3;
+  background: transparent;
+  padding: 0;
+}
+
+/* TÍTULO */
+.labs h2 {
+  color: #000;
+  margin-bottom: 15px;
+}
+
+/* LAB CARDS */
+.lab-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  background: var(--blanco);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 12px;
+
+  border: 1px solid #eee;
+  cursor: pointer;
   transition: 0.2s;
-  box-shadow: 0 2px 6px rgba(250, 203, 75, 0.35);
+}
+
+.lab-card:hover {
+  transform: translateY(-2px);
+  border-left: 4px solid var(--dorado);
+  box-shadow: 0 10px 20px rgba(250, 203, 75, 0.15);
+}
+
+.lab-card h3 {
+  margin: 0;
+  color: #000;
+  font-size: 15px;
+}
+
+/* ================= RESERVAS ================= */
+.reservas-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* RESERVA CARD */
+.reserva-card {
+  background: var(--blanco);
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  transition: 0.2s;
   cursor: pointer;
 }
 
-.day:hover {
+.reserva-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(250, 203, 75, 0.55);
+  border-left: 4px solid var(--dorado);
 }
 
-/* TEXTO GENERAL EN EVALUACIONES (NEGRO) */
-.right-panel .card p,
-.right-panel .card strong,
-.right-panel .card h4 {
-  color: #000000;
+.reserva-card h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #000;
 }
 
-/* SOLO FECHA DE VENCIMIENTO */
-.right-panel .card .red {
-  color: #AD868A !important;
+.reserva-card p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.reserva-card .fecha {
+  color: var(--rosado);
   font-weight: bold;
 }
 
-/* TEXTO DESTACADO */
-.green {
-  color: #22806B;
+/* ================= EVALUACIONES ================= */
+.evaluacion-card {
+  background: var(--blanco);
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.evaluacion-card:hover {
+  transform: translateX(6px);
+  border-left: 4px solid var(--dorado);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+}
+
+.evaluacion-card h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #000;
+}
+
+.evaluacion-card p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.evaluacion-card .fecha {
+  color: var(--rosado);
   font-weight: bold;
-}
-
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  .main {
-    flex-direction: column;
-  }
-
-  .right-panel {
-    flex-direction: row;
-  }
-}
-
-@media (max-width: 600px) {
-  .sidebar {
-    display: none;
-  }
-
-  .right-panel {
-    flex-direction: column;
-  }
-}
-
-
-/*****-PARA LA LINEA DE LA IZQUIERDA ***/
-.right-panel .card {
-  border-left: 4px solid #22806B; /* línea verde limpia */
-  background: transparent; /* elimina efecto “burbuja” */
-  box-shadow: none; /* quita tarjeta flotante */
-  border-radius: 0; /* elimina forma de card */
-}
-
-/* opcional: hover suave sin burbuja */
-.right-panel .card:hover {
-  transform: none;
-  border-left: 4px solid #29967E;
-  box-shadow: none;
 }

@@ -2,12 +2,39 @@ import "../css/reservas.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+interface Reserva {
+  titulo: string;
+  fecha: string;
+  hora: string;
+  lugar: string;
+}
+
 export default function Reservas() {
 
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-
   const [items, setItems] = useState<string[]>([]);
+
+  const [reservas] = useState<Reserva[]>([
+    {
+      titulo: "Proyecto de Electrónica",
+      fecha: "03 Agosto 2026",
+      hora: "1:00 PM - 2:00 PM",
+      lugar: "L1"
+    },
+    {
+      titulo: "Robótica",
+      fecha: "05 Agosto 2026",
+      hora: "3:00 PM - 5:00 PM",
+      lugar: "L2"
+    },
+    {
+      titulo: "Sistemas Digitales",
+      fecha: "08 Agosto 2026",
+      hora: "10:00 AM - 12:00 PM",
+      lugar: "L3"
+    }
+  ]);
 
   const agregarItem = () => {
     setItems([...items, ""]);
@@ -26,70 +53,78 @@ export default function Reservas() {
   return (
     <div className="container">
 
-      {/* SIDEBAR */}
       <div className="sidebar">
         <div className="menu">
           <h3>Reservación Estudiante</h3>
 
           <ul>
             <li onClick={() => navigate("/")}>Dashboard</li>
-            <li className="active" onClick={() => navigate("/reservas")}>Reservar</li>
+            <li className="active">Reservar</li>
             <li onClick={() => navigate("/evaluaciones")}>Evaluaciones</li>
             <li onClick={() => navigate("/perfil")}>Perfil</li>
           </ul>
         </div>
 
         <div className="sidebar-bottom">
-          Hello, Name
+          Hello, Name 
         </div>
       </div>
 
-      {/* CONTENT */}
       <div className="content">
 
-        {/* NAVBAR */}
         <div className="navbar">
           <h2>Reservación</h2>
           <input className="search-box" placeholder="🔍 Buscar..." />
           <div>Hello, Name 🔔</div>
         </div>
 
-        {/* MAIN */}
         <div className="main">
 
-          {/* LABS */}
           <div className="labs">
             <h2>Laboratorios</h2>
-
             <div className="lab-card" onClick={() => setShowModal(true)}>
-              <h3>L1</h3>
+              <h3>Laboratorio L1</h3>
+
+              <div className="lab-info">
+                <p>Instrumentos para prácticas Físicas, Estáticas, etc</p>
+                <span className="disponibilidad">Disponible: 08:00 - 18:00</span>
+              </div>
             </div>
 
             <div className="lab-card" onClick={() => setShowModal(true)}>
-              <h3>L2</h3>
+              <h3>Laboratorio L2</h3>
+
+              <div className="lab-info">
+                <p>Instrumentos para prácticas Físicas, Estáticas, etc</p>
+                <span className="disponibilidad">Disponible: 08:00 - 18:00</span>
+              </div>
             </div>
 
             <div className="lab-card" onClick={() => setShowModal(true)}>
-              <h3>L3</h3>
+              <h3>Laboratorio L3</h3>
+              <div className="lab-info">
+                <p>Instrumentos para prácticas Físicas, Estáticas, etc</p>
+                <span className="disponibilidad">Disponible: 08:00 - 18:00</span>
+              </div>
             </div>
           </div>
 
-          {/* RESERVAS */}
+          {/* PANEL TIPO LISTA (SIN BURBUJAS) */}
           <div className="reservas-panel">
-            <h3>Mis reservaciones</h3>
+            <h3 className="titulo-reservas">Mis reservaciones</h3>
 
-            <div className="reserva-card">
-              <h4>Proyecto de Electrónica</h4>
-              <p>Fecha: 03 Agosto 2026</p>
-              <p>Hora: 1:00 PM - 2:00 PM</p>
-              <p>Lugar: L1</p>
-            </div>
+            {reservas.map((reserva, index) => (
+              <div key={index} className="reserva-card">
+                <h4>{reserva.titulo}</h4>
+                <p>- {reserva.hora}</p>
+                <p className="fecha">Vence: {reserva.fecha}</p>
+              </div>
+            ))}
           </div>
 
         </div>
       </div>
 
-      {/* MODAL */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -97,7 +132,6 @@ export default function Reservas() {
             <h2>Nueva Reserva</h2>
 
             <div className="form-grid">
-
               <div>
                 <label>Título</label>
                 <input type="text" />
@@ -113,9 +147,9 @@ export default function Reservas() {
               <div>
                 <label>Laboratorio</label>
                 <select>
-                  <option>L1</option>
-                  <option>L2</option>
-                  <option>L3</option>
+                  <option>Laboratorio L1</option>
+                  <option>Laboratorio L2</option>
+                  <option>Laboratorio L3</option>
                 </select>
               </div>
 
@@ -138,63 +172,30 @@ export default function Reservas() {
                 <label>Personas (1 - 5)</label>
                 <input type="number" min={1} max={5} defaultValue={1} />
               </div>
-
             </div>
 
-            {/* 🔧 HERRAMIENTAS */}
             <div style={{ marginTop: "15px" }}>
               <label>Herramientas (opcional)</label>
 
               {items.map((item, index) => (
-                <div
-                  key={index}
-                  style={{ display: "flex", gap: "5px", marginTop: "5px" }}
-                >
+                <div key={index} style={{ display: "flex", gap: "5px", marginTop: "5px" }}>
                   <input
                     type="text"
                     value={item}
-                    placeholder="Ej: Proyector"
                     onChange={(e) => actualizarItem(index, e.target.value)}
                   />
-
-                  <button onClick={() => eliminarItem(index)}>
-                    X
-                  </button>
+                  <button onClick={() => eliminarItem(index)}>X</button>
                 </div>
               ))}
 
-              <button
-                type="button"
-                onClick={agregarItem}
-                style={{
-                  marginTop: "8px",
-                  background: "#FACB4B",
-                  color: "#22806B",
-                  border: "none",
-                  padding: "6px 10px",
-                  borderRadius: "6px",
-                  cursor: "pointer"
-                }}
-              >
-                + Añadir ítem
-              </button>
+              <button onClick={agregarItem}>+ Añadir ítem</button>
             </div>
 
-            {/* NOTAS (AHORA AL FINAL) */}
-            <textarea
-              style={{ marginTop: "15px" }}
-              placeholder="Notas adicionales..."
-            />
+            <textarea placeholder="Notas adicionales..." />
 
-            {/* BOTONES */}
             <div className="modal-buttons">
-              <button onClick={() => setShowModal(false)}>
-                Guardar
-              </button>
-
-              <button onClick={() => setShowModal(false)}>
-                Cancelar
-              </button>
+              <button onClick={() => setShowModal(false)}>Guardar</button>
+              <button onClick={() => setShowModal(false)}>Cancelar</button>
             </div>
 
           </div>

@@ -20,7 +20,10 @@ export default function Dashboard() {
               Reservar
             </li>
 
-            <li>Evaluaciones</li>
+            <li onClick={() => navigate("/evaluaciones")}>
+              Evaluaciones
+            </li>
+
             <li>Mensajes</li>
             <li>Perfil</li>
           </ul>
@@ -38,9 +41,9 @@ export default function Dashboard() {
         <div className="navbar">
           <h2>Dashboard</h2>
 
-          <input 
-            className="search-box" 
-            placeholder="🔍 Buscar..." 
+          <input
+            className="search-box"
+            placeholder="🔍 Buscar..."
           />
 
           <div>Hello, Name 🔔</div>
@@ -49,7 +52,7 @@ export default function Dashboard() {
         {/* MAIN */}
         <div className="main">
 
-          {/* IZQUIERDA - HORARIOS */}
+          {/* IZQUIERDA */}
           <div className="schedule">
             <h3>Horarios de Laboratorios</h3>
 
@@ -63,7 +66,6 @@ export default function Dashboard() {
               <div className="tab">Sábado</div>
             </div>
 
-            {/* BLOQUES DE HORARIO */}
             <div className="schedule-card">
               <div className="time">08:00 - 10:00</div>
               <div>
@@ -79,34 +81,29 @@ export default function Dashboard() {
                 <p>Lab 203</p>
               </div>
             </div>
-
           </div>
 
-          {/* DERECHA */}
-          <div className="right-panel">
+          {/* DERECHA - EVALUACIONES (CORREGIDO) */}
+          <div className="reservas-panel">
 
-            {/* EVALUACIONES */}
-            <div className="card">
-              <h4>Evaluaciones pendientes:</h4>
+            <h3>Evaluaciones pendientes</h3>
 
-              <div className="alert">
-                <p><b>Sistemas Digitales</b></p>
-                <p>- Examen Parcial</p>
-                <p className="red">Vence: 20 Oct (3 días)</p>
-              </div>
+            <div className="evaluacion-card">
+              <h4>Sistemas Digitales</h4>
+              <p>- Examen Parcial</p>
+              <p className="fecha">Vence: 20 Oct (3 días)</p>
+            </div>
 
-              <div className="alert">
-                <p><b>Lab Estática</b></p>
-                <p>- Informe de Lab 3</p>
-                <p className="red">Vence: 22 Oct (5 días)</p>
-              </div>
+            <div className="evaluacion-card">
+              <h4>Lab Estática</h4>
+              <p>- Informe de Lab 3</p>
+              <p className="fecha">Vence: 22 Oct (5 días)</p>
+            </div>
 
-              <div className="alert">
-                <p><b>Física</b></p>
-                <p>- Quiz Capítulo 4</p>
-                <p className="red">Vence: 25 Oct (8 días)</p>
-              </div>
-
+            <div className="evaluacion-card">
+              <h4>Física</h4>
+              <p>- Quiz Capítulo 4</p>
+              <p className="fecha">Vence: 25 Oct (8 días)</p>
             </div>
 
           </div>
