@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/evaluaciones.css";
 import { Sidebar } from "../components/Sidebar";
 
@@ -8,6 +9,7 @@ const meses = [
 ];
 
 export const Evaluaciones: React.FC = () => {
+  const navigate = useNavigate();
 
   // Estados para el calendario
   const [currentDate, setCurrentDate] = useState(new Date()); // Mes actual
@@ -88,8 +90,11 @@ export const Evaluaciones: React.FC = () => {
                   <span style={{ color: "var(--rosado)", fontSize: "16px", fontWeight: "bold" }}>
                     Evaluacion Requerida
                   </span>
-                  <span style={{ color: "var(--verde)", fontSize: "16px", fontWeight: "bold", cursor: "pointer" }}>
-                    Realizar evaluacion
+                  <span 
+                    style={{ color: "var(--verde)", fontSize: "16px", fontWeight: "bold", cursor: "pointer" }}
+                    onClick={() => navigate('/realizar-evaluacion')}
+                  >
+                    Realizar evaluación
                   </span>
                 </div>
               </div>
