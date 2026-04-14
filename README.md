@@ -37,3 +37,34 @@ npm run dev
 ```
 
 Al ejecutar el último comando, la terminal te mostrará una URL local (generalmente `http://localhost:5173/`) a la cual podrás acceder para visualizar la aplicación inicial de React.
+
+## Estructura del Proyecto (Frontend)
+
+La estructura actual del directorio `frontend/src` es la siguiente:
+
+```text
+frontend/src/
+├── App.css
+├── App.tsx
+├── index.css
+├── main.tsx
+├── assets/
+│   ├── hero.png
+│   ├── react.svg
+│   └── vite.svg
+├── components/
+│   ├── Navbar.tsx
+│   ├── RightPanel.tsx
+│   ├── Schedule.tsx
+│   └── Sidebar.tsx
+├── css/
+│   ├── estilos.css
+│   ├── evaluaciones.css
+│   ├── realizarEvaluacion.css
+│   └── reservas.css
+└── pages/
+    ├── Dashboard.tsx
+    ├── Evaluaciones.tsx
+    ├── RealizarEvaluacion.tsx
+    └── Reservas.tsx
+```
