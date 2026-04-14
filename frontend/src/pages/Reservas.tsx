@@ -1,5 +1,5 @@
 import "../css/reservas.css";
-import { useNavigate } from "react-router-dom";
+import { Sidebar } from "../components/Sidebar";
 import { useState } from "react";
 
 interface Reserva {
@@ -11,7 +11,6 @@ interface Reserva {
 
 export default function Reservas() {
 
-  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [items, setItems] = useState<string[]>([]);
 
@@ -53,22 +52,7 @@ export default function Reservas() {
   return (
     <div className="container">
 
-      <div className="sidebar">
-        <div className="menu">
-          <h3>Reservación Estudiante</h3>
-
-          <ul>
-            <li onClick={() => navigate("/")}>Dashboard</li>
-            <li className="active">Reservar</li>
-            <li onClick={() => navigate("/evaluaciones")}>Evaluaciones</li>
-            <li onClick={() => navigate("/perfil")}>Perfil</li>
-          </ul>
-        </div>
-
-        <div className="sidebar-bottom">
-          Hello, Name 
-        </div>
-      </div>
+      <Sidebar />
 
       <div className="content">
 

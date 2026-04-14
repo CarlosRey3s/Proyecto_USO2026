@@ -1,6 +1,5 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { EvaluacionesEstudiante } from './vistas/EvaluacionesEstudiante';
+import { Evaluaciones } from './pages/Evaluaciones';
 import Dashboard from "./pages/Dashboard";
 import Reservas from "./pages/Reservas";
 
@@ -10,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/reservas" element={<Reservas />} />
-        <Route path="/evaluaciones" element={<EvaluacionesEstudiante />} />
+        <Route path="/evaluaciones" element={<Evaluaciones />} />
       </Routes>
     </BrowserRouter>
   );

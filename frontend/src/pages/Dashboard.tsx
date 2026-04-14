@@ -1,5 +1,6 @@
-import "../css/vistaEstudiante.css";
+import "../css/evaluaciones.css";
 import { useNavigate } from "react-router-dom";
+import { Sidebar } from "../components/Sidebar";
 
 export default function Dashboard() {
 
@@ -8,31 +9,7 @@ export default function Dashboard() {
   return (
     <div className="container">
 
-      {/* SIDEBAR */}
-      <div className="sidebar">
-        <div className="menu">
-          <h3>Dashboard</h3>
-
-          <ul>
-            <li className="active">Dashboard</li>
-
-            <li onClick={() => navigate("/reservas")}>
-              Reservar
-            </li>
-
-            <li onClick={() => navigate("/evaluaciones")}>
-              Evaluaciones
-            </li>
-
-            <li>Mensajes</li>
-            <li>Perfil</li>
-          </ul>
-        </div>
-
-        <div className="sidebar-bottom">
-          Hello, Name
-        </div>
-      </div>
+      <Sidebar />
 
       {/* CONTENT */}
       <div className="content">
