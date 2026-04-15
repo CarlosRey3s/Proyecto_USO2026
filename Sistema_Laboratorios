@@ -1,8 +1,11 @@
 -- ==========================================================
--- SCRIPT COMPLETO: SISTEMA DE GESTIÓN DE LABORATORIOS (USO)
+-- SISTEMA DE GESTIÓN DE LABORATORIOS (VERSIÓN PRO)
 -- ==========================================================
 
--- 1. TABLAS MAESTRAS (INDEPENDIENTES)
+CREATE DATABASE sistema_Laboratorio;
+use sistema_Laboratorio;
+
+-- 1. TABLAS MAESTRAS
 -- ----------------------------------------------------------
 
 CREATE TABLE LABORATORIOS (
@@ -26,7 +29,18 @@ CREATE TABLE USUARIOS (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. INVENTARIO Y MOVIMIENTOS
+-- 2. MESAS (NUEVO)
+-- ----------------------------------------------------------
+
+CREATE TABLE MESAS (
+    id SERIAL PRIMARY KEY,
+    FK_laboratorio_id INTEGER REFERENCES LABORATORIOS(id) ON DELETE CASCADE,
+    nombre VARCHAR(50) NOT NULL,
+    capacidad INTEGER,
+    estado VARCHAR(20) DEFAULT 'disponible'
+);
+
+-- 3. INVENTARIO
 -- ----------------------------------------------------------
 
 CREATE TABLE ITEMS_INVENTARIO (
@@ -38,44 +52,50 @@ CREATE TABLE ITEMS_INVENTARIO (
     categoria VARCHAR(50),
     ubicacion_fisica VARCHAR(100),
     unidad_medida VARCHAR(20),
-    cantidad_stock DECIMAL(10,2) DEFAULT 0,
+    tipo_control VARCHAR(20) CHECK (tipo_control IN ('entero', 'decimal')),
+    cantidad_stock DECIMAL(10,2) DEFAULT 0 CHECK (cantidad_stock >= 0),
+    stock_minimo DECIMAL(10,2) DEFAULT 0,
     imagen_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE MOVIMIENTOS_INVENTARIO (
     id SERIAL PRIMARY KEY,
-    FK_item_id INTEGER REFERENCES ITEMS_INVENTARIO(id) ON DELETE CASCADE,
-    FK_usuario_id INTEGER REFERENCES USUARIOS(id),
+    FK_item_id INTEGER NOT NULL REFERENCES ITEMS_INVENTARIO(id) ON DELETE CASCADE,
+    FK_usuario_id INTEGER NOT NULL REFERENCES USUARIOS(id),
     tipo_movimiento VARCHAR(10) CHECK (tipo_movimiento IN ('ingreso', 'consumo')),
-    cantidad DECIMAL(10,2) NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL CHECK (cantidad > 0),
     fecha_movimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     observaciones TEXT
 );
 
--- 3. RESERVAS Y ACTIVIDADES (GESTIÓN DE ESPACIOS)
+-- 4. RESERVAS
 -- ----------------------------------------------------------
 
 CREATE TABLE RESERVAS (
     id SERIAL PRIMARY KEY,
-    FK_estudiante_id INTEGER REFERENCES USUARIOS(id),
+    FK_estudiante_id INTEGER NOT NULL REFERENCES USUARIOS(id),
+    FK_laboratorio_id INTEGER NOT NULL REFERENCES LABORATORIOS(id),
+    FK_mesa_id INTEGER REFERENCES MESAS(id),
     titulo VARCHAR(150),
     fecha_hora_inicio TIMESTAMP NOT NULL,
     fecha_hora_fin TIMESTAMP NOT NULL,
     num_estudiantes INTEGER,
     nota_adicional TEXT,
     estado VARCHAR(20) CHECK (estado IN ('pendiente', 'aprobada', 'cancelada', 'completada')),
-    numero_mesas INTEGER,
-    capacidad_max INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (fecha_hora_fin > fecha_hora_inicio)
 );
 
 CREATE TABLE RESERVA_ITEMS (
     id SERIAL PRIMARY KEY,
     FK_reserva_id INTEGER REFERENCES RESERVAS(id) ON DELETE CASCADE,
     FK_item_id INTEGER REFERENCES ITEMS_INVENTARIO(id),
-    cantidad_solicitada DECIMAL(10,2) NOT NULL
+    cantidad_solicitada DECIMAL(10,2) NOT NULL CHECK (cantidad_solicitada > 0)
 );
+
+-- 5. ACTIVIDADES
+-- ----------------------------------------------------------
 
 CREATE TABLE ACTIVIDADES (
     id SERIAL PRIMARY KEY,
@@ -89,17 +109,18 @@ CREATE TABLE ACTIVIDADES (
     repetir_semanalmente BOOLEAN DEFAULT FALSE,
     num_estudiantes INTEGER,
     nota_adicional TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (fecha_hora_fin > fecha_hora_inicio)
 );
 
 CREATE TABLE ACTIVIDAD_ITEMS (
     id SERIAL PRIMARY KEY,
     FK_actividad_id INTEGER REFERENCES ACTIVIDADES(id) ON DELETE CASCADE,
     FK_item_id INTEGER REFERENCES ITEMS_INVENTARIO(id),
-    cantidad_usada DECIMAL(10,2) NOT NULL
+    cantidad_usada DECIMAL(10,2) NOT NULL CHECK (cantidad_usada > 0)
 );
 
--- 4. MÓDULO DE EVALUACIONES (CONFIGURACIÓN POR ADMIN)
+-- 6. EVALUACIONES
 -- ----------------------------------------------------------
 
 CREATE TABLE EVALUACIONES_PLANTILLA (
@@ -121,16 +142,14 @@ CREATE TABLE BANCO_PREGUNTAS (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Relación N:M para que una evaluación tenga muchas preguntas
 CREATE TABLE EVALUACION_CONTENIDO (
     id SERIAL PRIMARY KEY,
     FK_plantilla_id INTEGER REFERENCES EVALUACIONES_PLANTILLA(id) ON DELETE CASCADE,
     FK_pregunta_id INTEGER REFERENCES BANCO_PREGUNTAS(id),
     orden INTEGER,
-    puntos_valor DECIMAL(5,2) DEFAULT 1.0
+    puntos_valor DECIMAL(5,2) DEFAULT 1.0 CHECK (puntos_valor > 0)
 );
 
--- Opciones para preguntas cerradas
 CREATE TABLE PREGUNTA_OPCIONES (
     id SERIAL PRIMARY KEY,
     FK_pregunta_id INTEGER REFERENCES BANCO_PREGUNTAS(id) ON DELETE CASCADE,
@@ -138,7 +157,7 @@ CREATE TABLE PREGUNTA_OPCIONES (
     es_correcta BOOLEAN DEFAULT FALSE
 );
 
--- 5. EJECUCIÓN Y RESPUESTAS (FLUJO DEL ESTUDIANTE)
+-- 7. EJECUCIÓN DE EVALUACIONES
 -- ----------------------------------------------------------
 
 CREATE TABLE EVALUACIONES_ASIGNADAS (
@@ -158,6 +177,7 @@ CREATE TABLE RESPUESTAS_ESTUDIANTE (
     FK_evaluacion_asignada_id INTEGER REFERENCES EVALUACIONES_ASIGNADAS(id) ON DELETE CASCADE,
     FK_pregunta_id INTEGER REFERENCES BANCO_PREGUNTAS(id),
     FK_opcion_seleccionada_id INTEGER REFERENCES PREGUNTA_OPCIONES(id),
-    respuesta_texto TEXT, -- Se usa solo si la pregunta es 'abierta'
-    puntaje_obtenido DECIMAL(5,2)
+    respuesta_texto TEXT,
+    puntaje_obtenido DECIMAL(5,2),
+    UNIQUE (FK_evaluacion_asignada_id, FK_pregunta_id)
 );
