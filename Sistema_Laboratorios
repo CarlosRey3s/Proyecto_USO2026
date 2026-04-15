@@ -1,0 +1,163 @@
+-- ==========================================================
+-- SCRIPT COMPLETO: SISTEMA DE GESTIÓN DE LABORATORIOS (USO)
+-- ==========================================================
+
+-- 1. TABLAS MAESTRAS (INDEPENDIENTES)
+-- ----------------------------------------------------------
+
+CREATE TABLE LABORATORIOS (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    estado VARCHAR(20) DEFAULT 'activo',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE USUARIOS (
+    id SERIAL PRIMARY KEY,
+    nombres VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    expediente VARCHAR(20) UNIQUE NOT NULL,
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    carrera VARCHAR(100),
+    rol VARCHAR(20) CHECK (rol IN ('admin', 'estudiante', 'docente')),
+    estado VARCHAR(20) DEFAULT 'activo',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. INVENTARIO Y MOVIMIENTOS
+-- ----------------------------------------------------------
+
+CREATE TABLE ITEMS_INVENTARIO (
+    id SERIAL PRIMARY KEY,
+    FK_laboratorio_id INTEGER REFERENCES LABORATORIOS(id) ON DELETE SET NULL,
+    nombre VARCHAR(100) NOT NULL,
+    codigo_interno VARCHAR(50) UNIQUE,
+    numero_cas VARCHAR(50), 
+    categoria VARCHAR(50),
+    ubicacion_fisica VARCHAR(100),
+    unidad_medida VARCHAR(20),
+    cantidad_stock DECIMAL(10,2) DEFAULT 0,
+    imagen_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE MOVIMIENTOS_INVENTARIO (
+    id SERIAL PRIMARY KEY,
+    FK_item_id INTEGER REFERENCES ITEMS_INVENTARIO(id) ON DELETE CASCADE,
+    FK_usuario_id INTEGER REFERENCES USUARIOS(id),
+    tipo_movimiento VARCHAR(10) CHECK (tipo_movimiento IN ('ingreso', 'consumo')),
+    cantidad DECIMAL(10,2) NOT NULL,
+    fecha_movimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    observaciones TEXT
+);
+
+-- 3. RESERVAS Y ACTIVIDADES (GESTIÓN DE ESPACIOS)
+-- ----------------------------------------------------------
+
+CREATE TABLE RESERVAS (
+    id SERIAL PRIMARY KEY,
+    FK_estudiante_id INTEGER REFERENCES USUARIOS(id),
+    titulo VARCHAR(150),
+    fecha_hora_inicio TIMESTAMP NOT NULL,
+    fecha_hora_fin TIMESTAMP NOT NULL,
+    num_estudiantes INTEGER,
+    nota_adicional TEXT,
+    estado VARCHAR(20) CHECK (estado IN ('pendiente', 'aprobada', 'cancelada', 'completada')),
+    numero_mesas INTEGER,
+    capacidad_max INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE RESERVA_ITEMS (
+    id SERIAL PRIMARY KEY,
+    FK_reserva_id INTEGER REFERENCES RESERVAS(id) ON DELETE CASCADE,
+    FK_item_id INTEGER REFERENCES ITEMS_INVENTARIO(id),
+    cantidad_solicitada DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE ACTIVIDADES (
+    id SERIAL PRIMARY KEY,
+    FK_docente_id INTEGER REFERENCES USUARIOS(id),
+    FK_laboratorio_id INTEGER REFERENCES LABORATORIOS(id),
+    FK_creado_por INTEGER REFERENCES USUARIOS(id),
+    titulo VARCHAR(150) NOT NULL,
+    tipo VARCHAR(20) CHECK (tipo IN ('clase', 'reserva', 'mant')),
+    fecha_hora_inicio TIMESTAMP NOT NULL,
+    fecha_hora_fin TIMESTAMP NOT NULL,
+    repetir_semanalmente BOOLEAN DEFAULT FALSE,
+    num_estudiantes INTEGER,
+    nota_adicional TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ACTIVIDAD_ITEMS (
+    id SERIAL PRIMARY KEY,
+    FK_actividad_id INTEGER REFERENCES ACTIVIDADES(id) ON DELETE CASCADE,
+    FK_item_id INTEGER REFERENCES ITEMS_INVENTARIO(id),
+    cantidad_usada DECIMAL(10,2) NOT NULL
+);
+
+-- 4. MÓDULO DE EVALUACIONES (CONFIGURACIÓN POR ADMIN)
+-- ----------------------------------------------------------
+
+CREATE TABLE EVALUACIONES_PLANTILLA (
+    id SERIAL PRIMARY KEY,
+    FK_creado_por INTEGER REFERENCES USUARIOS(id),
+    titulo VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    tiempo_limite_minutos INTEGER DEFAULT 30,
+    estado VARCHAR(20) DEFAULT 'activo',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE BANCO_PREGUNTAS (
+    id SERIAL PRIMARY KEY,
+    FK_admin_id INTEGER REFERENCES USUARIOS(id),
+    enunciado TEXT NOT NULL,
+    tipo_pregunta VARCHAR(20) CHECK (tipo_pregunta IN ('opcion_multiple', 'verdadero_falso', 'abierta')),
+    categoria VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Relación N:M para que una evaluación tenga muchas preguntas
+CREATE TABLE EVALUACION_CONTENIDO (
+    id SERIAL PRIMARY KEY,
+    FK_plantilla_id INTEGER REFERENCES EVALUACIONES_PLANTILLA(id) ON DELETE CASCADE,
+    FK_pregunta_id INTEGER REFERENCES BANCO_PREGUNTAS(id),
+    orden INTEGER,
+    puntos_valor DECIMAL(5,2) DEFAULT 1.0
+);
+
+-- Opciones para preguntas cerradas
+CREATE TABLE PREGUNTA_OPCIONES (
+    id SERIAL PRIMARY KEY,
+    FK_pregunta_id INTEGER REFERENCES BANCO_PREGUNTAS(id) ON DELETE CASCADE,
+    texto_opcion TEXT NOT NULL,
+    es_correcta BOOLEAN DEFAULT FALSE
+);
+
+-- 5. EJECUCIÓN Y RESPUESTAS (FLUJO DEL ESTUDIANTE)
+-- ----------------------------------------------------------
+
+CREATE TABLE EVALUACIONES_ASIGNADAS (
+    id SERIAL PRIMARY KEY,
+    FK_plantilla_id INTEGER REFERENCES EVALUACIONES_PLANTILLA(id),
+    FK_estudiante_id INTEGER REFERENCES USUARIOS(id),
+    FK_laboratorio_id INTEGER REFERENCES LABORATORIOS(id),
+    fecha_asignacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_vencimiento TIMESTAMP,
+    intento_numero INTEGER DEFAULT 1,
+    calificacion_final DECIMAL(5,2),
+    estado VARCHAR(20) CHECK (estado IN ('pendiente', 'en_progreso', 'completada'))
+);
+
+CREATE TABLE RESPUESTAS_ESTUDIANTE (
+    id SERIAL PRIMARY KEY,
+    FK_evaluacion_asignada_id INTEGER REFERENCES EVALUACIONES_ASIGNADAS(id) ON DELETE CASCADE,
+    FK_pregunta_id INTEGER REFERENCES BANCO_PREGUNTAS(id),
+    FK_opcion_seleccionada_id INTEGER REFERENCES PREGUNTA_OPCIONES(id),
+    respuesta_texto TEXT, -- Se usa solo si la pregunta es 'abierta'
+    puntaje_obtenido DECIMAL(5,2)
+);
