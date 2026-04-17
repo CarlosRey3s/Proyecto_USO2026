@@ -1,6 +1,12 @@
 import { useLocation } from 'react-router-dom';
 import { Menu, Bell } from 'lucide-react';
 
+// Definimos que este componente recibe una propiedad
+interface NavbarProps {
+  onToggleMenu: () => void;
+}
+
+export const Navbar = ({ onToggleMenu }: NavbarProps) => {
 export const Navbar = () => {
   const location = useLocation();
 
@@ -18,6 +24,8 @@ export const Navbar = () => {
   return (
     <header className="navbar">
       <div className="navbar-left">
+        {/* ¡Agregamos el evento onClick aquí! */}
+        <button className="icon-button" onClick={onToggleMenu}>
         <button className="icon-button menu-toggle">
           <Menu size={28} strokeWidth={1.5} />
         </button>
