@@ -7,7 +7,6 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ onToggleMenu }: NavbarProps) => {
-export const Navbar = () => {
   const location = useLocation();
 
   const getTitle = () => {
@@ -24,9 +23,7 @@ export const Navbar = () => {
   return (
     <header className="navbar">
       <div className="navbar-left">
-        {/* ¡Agregamos el evento onClick aquí! */}
-        <button className="icon-button" onClick={onToggleMenu}>
-        <button className="icon-button menu-toggle">
+        <button className="icon-button menu-toggle" onClick={onToggleMenu}>
           <Menu size={28} strokeWidth={1.5} />
         </button>
         <h1 className="navbar-title">{getTitle()}</h1>
