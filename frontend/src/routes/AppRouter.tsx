@@ -1,10 +1,10 @@
 // src/routes/AppRouter.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from '../components/layout/MainLayout';
-import Dashboard from "../pages/Dashboard";
-import Reservas from "../pages/Reservas";
-import { Evaluaciones } from '../pages/Evaluaciones';
-import RealizarEvaluacion from "../pages/RealizarEvaluacion";
+import Dashboard from "../pages/estudiante/Dashboard";
+import Reservar from "../pages/estudiante/Reservar";
+import { Evaluaciones } from '../pages/estudiante/Evaluaciones';
+import RealizarEvaluacion from "../pages/estudiante/RealizarEvaluacion";
 import { CalendarioView } from '../pages/admin/Calendario'; 
 
 export const AppRouter = () => {
@@ -15,7 +15,7 @@ export const AppRouter = () => {
         <Route path="/" element={<MainLayout />}>
           
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="reservas" element={<Reservas />} />
+          <Route path="reservas" element={<Reservar />} />
           <Route path="evaluaciones" element={<Evaluaciones />} />
           <Route path="realizar-evaluacion" element={<RealizarEvaluacion />} />
           <Route path="calendario" element={<CalendarioView />} />

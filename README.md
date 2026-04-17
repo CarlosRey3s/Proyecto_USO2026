@@ -38,33 +38,85 @@ npm run dev
 
 Al ejecutar el último comando, la terminal te mostrará una URL local (generalmente `http://localhost:5173/`) a la cual podrás acceder para visualizar la aplicación inicial de React.
 
-## Estructura del Proyecto (Frontend)
+## Guía para inicializar el Backend (Node.js)
 
-La estructura actual del directorio `frontend/src` es la siguiente:
+A continuación, se detallan los pasos para configurar y levantar el servidor de base de datos.
+
+### 1. Inicializar el proyecto
+Entra en la carpeta del backend e inicializa Node.js.
+
+```bash
+cd backend
+npm init -y
+```
+
+### 2. Instalar dependencias esenciales
+Instala el servidor y los conectores de base de datos.
+
+```bash
+# Instalación de librerías base
+npm install express mysql2 dotenv cors morgan
+```
+
+### 3. Configurar variables de entorno
+Crea un archivo llamado `.env` en la raíz de la carpeta `backend` con el siguiente contenido:
+
+```env
+PORT=4000
+DB_HOST=localhost
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+DB_NAME=sistema_laboratorio
+```
+
+### 4. Ejecutar el servidor
+Puedes iniciar el servidor con:
+
+```bash
+# Ejecución normal
+node src/server.js
+```
+
+---
+
+## Estructura Actual del Proyecto
+
+El proyecto se divide en tres áreas principales para mantener una separación clara de responsabilidades:
+
+### 1. Base de Datos (`/database`)
+Contiene los scripts SQL para la creación y gestión del esquema de la base de datos.
+- `bd_sistema_laboratorio.sql`: Esquema completo de tablas y relaciones.
+
+### 2. Backend (`/backend`)
+Servidor Node.js estructurado de forma modular (JavaScript):
+
+```text
+backend/
+├── src/
+│   ├── config/         # Conexión a la base de datos (db.js)
+│   ├── middleware/     # Funciones de filtrado y seguridad
+│   ├── routes/         # Definición de rutas/endpoints
+│   ├── services/       # Lógica de negocio y consultas pesadas
+│   ├── controllers/    # Controladores de las rutas
+│   └── server.js       # Archivo principal de configuración de Express
+├── .env                # Variables de entorno
+└── index.js            # Punto de entrada para el arranque del servidor
+```
+
+### 3. Frontend (`/frontend/src`)
+Aplicación React estructurada de forma modular:
 
 ```text
 frontend/src/
-├── App.css
-├── App.tsx
-├── index.css
-├── main.tsx
-├── assets/
-│   ├── hero.png
-│   ├── react.svg
-│   └── vite.svg
 ├── components/
-│   ├── Navbar.tsx
-│   ├── RightPanel.tsx
-│   ├── Schedule.tsx
-│   └── Sidebar.tsx
-├── css/
-│   ├── estilos.css
-│   ├── evaluaciones.css
-│   ├── realizarEvaluacion.css
-│   └── reservas.css
-└── pages/
-    ├── Dashboard.tsx
-    ├── Evaluaciones.tsx
-    ├── RealizarEvaluacion.tsx
-    └── Reservas.tsx
-```
+│   └── layout/         # Componentes globales (Sidebar, Navbar, MainLayout)
+├── css/                # Estilos compartidos por vistas
+├── pages/
+│   ├── estudiante/     # Vistas específicas del rol Estudiante
+│   ├── admin/          # Vistas específicas del rol Administrador
+│   └── auth/           # Vistas de inicio de sesión y registro
+├── routes/             # Configuración del AppRouter
+└── App.tsx             # Punto de entrada de la aplicación
+```
+
+

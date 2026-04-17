@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/realizarEvaluacion.css';
+import '../../css/realizarEvaluacion.css';
 
 interface Pregunta {
   id: number;
