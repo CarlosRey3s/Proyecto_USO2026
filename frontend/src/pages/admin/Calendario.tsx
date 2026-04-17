@@ -1,79 +1,167 @@
-// src/pages/admin/CalendarioView.tsx
-import { Search, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Printer } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Calendar as CalendarIcon, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, Printer } from 'lucide-react';
+import { Calendar, dateFnsLocalizer, type ToolbarProps, type View } from 'react-big-calendar';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import { es } from 'date-fns/locale/es';
 
-export const CalendarioView = () => {
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+const locales = { 'es': es };
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 0 }),
+  getDay,
+  locales,
+});
+
+// ── 1. AGREGAMOS A QUÉ LABORATORIO PERTENECE CADA EVENTO ──
+export interface EventoLaboratorio {
+  title: string;
+  start: Date;
+  end: Date;
+  laboratorio: string; // <-- NUEVO: Para saber de qué lab es el evento
+}
+
+// Lista de todos nuestros laboratorios que existen
+const LABORATORIOS_DISPONIBLES = ['Lab de Redes', 'Lab de Computo'];
+
+// Eventos de prueba con su respectivo laboratorio asignado
+const eventosPrueba: EventoLaboratorio[] = [
+  {
+    title: 'Clase de Cisco CCNA',
+    start: new Date(2026, 3, 15, 9, 0),
+    end: new Date(2026, 3, 15, 12, 0),
+    laboratorio: 'Lab de Redes'
+  },
+  {
+    title: 'Mantenimiento de Servidores',
+    start: new Date(2026, 3, 16, 14, 0),
+    end: new Date(2026, 3, 16, 17, 0),
+    laboratorio: 'Lab de Redes'
+  },
+  {
+    title: 'Clase de Programación III',
+    start: new Date(2026, 3, 15, 13, 0),
+    end: new Date(2026, 3, 15, 16, 0),
+    laboratorio: 'Lab de Computo'
+  }
+];
+
+const CustomToolbar = (toolbar: ToolbarProps<EventoLaboratorio>) => {
+  const irAHoy = () => toolbar.onNavigate('TODAY');
+  const irAtras = () => toolbar.onNavigate('PREV');
+  const irAdelante = () => toolbar.onNavigate('NEXT');
+  const vistaActual = toolbar.view;
+
   return (
-    <div className="flex h-full gap-6">
-      
-      {/* ── COLUMNA IZQUIERDA: CALENDARIO PRINCIPAL ── */}
-      <div className="flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-        
-        {/* Controles superiores del calendario */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <button className="bg-teal-700 text-white px-4 py-1.5 rounded-full text-sm font-medium">
-              Hoy
-            </button>
-            <div className="flex items-center gap-2 text-gray-400">
-              <button className="hover:text-gray-600"><ChevronLeft size={20} /></button>
-              <button className="hover:text-gray-600"><ChevronRight size={20} /></button>
-            </div>
-            <h2 className="text-2xl text-gray-500 font-light ml-2">Febrero 2026</h2>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button className="p-2 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200">
-              <Search size={18} />
-            </button>
-            <button className="bg-yellow-400 text-gray-900 px-4 py-1.5 rounded-full text-sm font-medium">
-              Semana
-            </button>
-            <button className="p-2 bg-yellow-400 rounded-full text-gray-900 hover:bg-yellow-500">
-              <CalendarIcon size={18} />
-            </button>
-          </div>
+    <div className="calendar-toolbar-custom">
+      <div className="toolbar-left">
+        <button onClick={irAHoy} className="btn-hoy">Hoy</button>
+        <div className="nav-arrows">
+          <button onClick={irAtras} className="btn-icon"><ChevronLeft size={20} /></button>
+          <button onClick={irAdelante} className="btn-icon"><ChevronRight size={20} /></button>
         </div>
-
-        {/* Cuadrícula del Calendario (Placeholder) */}
-        <div className="flex-1 border border-gray-200 rounded-lg flex items-center justify-center bg-gray-50 text-gray-400">
-          {/* Aquí construiremos el Grid de horas y días más adelante */}
-          <p>Área del Grid del Calendario</p>
-        </div>
+        <h2 className="toolbar-label">{toolbar.label}</h2>
       </div>
 
-      {/* ── COLUMNA DERECHA: BARRA DE HERRAMIENTAS ── */}
-      <div className="w-64 flex flex-col gap-4">
-        
-        {/* Botón Crear */}
-        <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium py-3 px-4 flex items-center gap-2 rounded-md transition-colors">
-          <Plus size={20} /> Crear
-        </button>
+      <div className="toolbar-right">
+        <button className="btn-search"><Search size={18} /></button>
+        <button onClick={() => toolbar.onView('week')} className={`btn-view ${vistaActual === 'week' ? 'active' : ''}`}>Semana</button>
+        <button onClick={() => toolbar.onView('month')} className={`btn-view-icon ${vistaActual === 'month' ? 'active' : ''}`}><CalendarIcon size={18} /></button>
+      </div>
+    </div>
+  );
+};
 
-        {/* Mini Calendario (Placeholder) */}
-        <div className="bg-black text-white p-4 rounded-md flex justify-center items-center h-40">
-          Mini Calendario
+export const CalendarioView = () => {
+  const [fechaActual, setFechaActual] = useState(new Date(2026, 3, 15));
+  const [vistaActual, setVistaActual] = useState<View>('week');
+
+  // ── 2. NUEVOS ESTADOS PARA LOS LABORATORIOS ──
+  // Estado para saber qué laboratorios están marcados (por defecto, todos)
+  const [labsActivos, setLabsActivos] = useState<string[]>(LABORATORIOS_DISPONIBLES);
+  // Estado para saber si el menú está desplegado o contraído
+  const [menuDesplegado, setMenuDesplegado] = useState(true);
+
+  // ── 3. LÓGICA DE FILTRADO Y MANEJO DE CLICS ──
+  // Esta función decide qué pasa cuando le damos clic a un checkbox
+  const toggleLaboratorio = (nombreLab: string) => {
+    setLabsActivos((prev) => {
+      // Si el laboratorio ya estaba marcado, lo quitamos de la lista
+      if (prev.includes(nombreLab)) {
+        return prev.filter(lab => lab !== nombreLab);
+      }
+      // Si no estaba marcado, lo agregamos a la lista
+      else {
+        return [...prev, nombreLab];
+      }
+    });
+  };
+
+  // MAGIA DE FILTRADO: Solo le pasamos al calendario los eventos cuyo laboratorio esté en "labsActivos"
+  const eventosFiltrados = eventosPrueba.filter(evento => 
+    labsActivos.includes(evento.laboratorio)
+  );
+
+  return (
+    <div className="calendar-page-wrapper">
+      
+      <div className="calendar-main-container">
+        <Calendar
+          localizer={localizer}
+          events={eventosFiltrados} // Le pasamos la lista FILTRADA, no la original
+          startAccessor="start"
+          endAccessor="end"
+          date={fechaActual}
+          onNavigate={(nuevaFecha) => setFechaActual(nuevaFecha)}
+          view={vistaActual}
+          onView={(nuevaVista) => setVistaActual(nuevaVista)}
+          culture="es"
+          components={{ toolbar: CustomToolbar }}
+          style={{ height: '100%' }}
+        />
+      </div>
+
+      <div className="calendar-sidebar-right">
+        <button className="btn-crear"><Plus size={20} /> Crear</button>
+        <div className="mini-calendar-placeholder">Mini Calendario</div>
+
+        {/* ── 4. UI: TARJETA DE MIS LABORATORIOS ── */}
+        <div className="mis-laboratorios-card">
+          
+          {/* Cabecera (Ahora es un botón interactivo) */}
+          <div 
+            className="card-header" 
+            onClick={() => setMenuDesplegado(!menuDesplegado)}
+            style={{ cursor: 'pointer', justifyContent: 'space-between' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <CalendarIcon size={18} /> Mis laboratorios
+            </div>
+            {/* Cambiamos la flechita dependiendo de si está abierto o cerrado */}
+            {menuDesplegado ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </div>
+
+          {/* Cuerpo (Solo se muestra si menuDesplegado es true) */}
+          {menuDesplegado && (
+            <div className="card-body">
+              {LABORATORIOS_DISPONIBLES.map((lab) => (
+                <label key={lab} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={labsActivos.includes(lab)} // Se marca solo si está en nuestro estado
+                    onChange={() => toggleLaboratorio(lab)} // Llama a nuestra función al hacer clic
+                  /> 
+                  {lab}
+                </label>
+              ))}
+            </div>
+          )}
+
         </div>
 
-        {/* Mis Laboratorios */}
-        <div className="bg-teal-700 text-white rounded-md overflow-hidden">
-          <div className="p-3 font-medium flex items-center gap-2 border-b border-teal-600">
-            <CalendarIcon size={18} /> Mis laboratorios
-          </div>
-          <div className="p-3 space-y-2 text-sm">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" className="accent-teal-500" defaultChecked /> Lorem Inpus
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" className="accent-teal-500" defaultChecked /> Lorem Inpus
-            </label>
-          </div>
-        </div>
-
-        {/* Botón Exportar */}
-        <button className="w-full bg-rose-400 hover:bg-rose-500 text-white font-medium py-3 px-4 flex items-center gap-2 rounded-md transition-colors mt-auto">
-          <Printer size={20} /> Exportar
-        </button>
-
+        <button className="btn-exportar"><Printer size={20} /> Exportar</button>
       </div>
     </div>
   );

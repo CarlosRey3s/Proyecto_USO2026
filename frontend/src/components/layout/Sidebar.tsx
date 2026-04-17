@@ -1,6 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 
-export const Sidebar = () => {
+// Definimos la propiedad que recibe
+interface SidebarProps {
+  isOpen: boolean;
+}
+export const Sidebar = ({isOpen}: SidebarProps) => {
   const location = useLocation();
 
   const menuItems = [
@@ -11,13 +15,13 @@ export const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
+    //Si isOpne es falso, le regresamos la clase 'Collapsed'
+   <aside className={`sidebar ${!isOpen ? 'collapsed' : ''}`}>
       <div className="sidebar-logo-container">
         <div className="sidebar-avatar">
           USO
         </div>
       </div>
-
       <nav>
         <ul className="sidebar-nav">
           {menuItems.map((item) => {
