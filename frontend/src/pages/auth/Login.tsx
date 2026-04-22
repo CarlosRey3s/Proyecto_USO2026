@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { authService } from "../../services/authService";
 import "../../css/login.css";
 
 /* ── Types ── */
@@ -156,6 +159,10 @@ export default function Login() {
   const [showPwd, setShowPwd]   = useState(false);
   const [loading, setLoading]   = useState(false);
   const [errors, setErrors]     = useState<FormErrors>({});
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const { login: authLogin } = useAuth();
+  const navigate = useNavigate();
 
   const validate = (): FormErrors => {
     const e: FormErrors = {};
@@ -174,11 +181,27 @@ export default function Login() {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    
     setErrors({});
+    setServerError(null);
     setLoading(true);
-    // TODO: authService.login({ email, password, role })
-    await new Promise(r => setTimeout(r, 1800));
-    setLoading(false);
+
+    try {
+      const data = await authService.login(email, password, role);
+      authLogin(data.user, data.token);
+      
+      // Redirigir según el rol
+      if (data.user.rol === 'admin') {
+        navigate('/calendario'); // O el dashboard de admin
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (error: any) {
+      console.error('Error en login:', error);
+      setServerError(error.response?.data?.message || 'Error al conectar con el servidor');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -216,6 +239,12 @@ export default function Login() {
               <AdminIcon /> Administrador
             </button>
           </div>
+
+          {serverError && (
+            <p className="login-error-msg server-error" role="alert" style={{ textAlign: 'center', marginBottom: '15px', color: '#ff4d4f' }}>
+              {serverError}
+            </p>
+          )}
 
           <form onSubmit={handleSubmit} noValidate>
 

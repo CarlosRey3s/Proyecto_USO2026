@@ -17,8 +17,10 @@ app.get('/api/ping', (req, res) => {
 
 // Importar Rutas
 const laboratorioRoutes = require('./routes/laboratorioRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Uso de Rutas
 app.use('/api/laboratorios', laboratorioRoutes);
+app.use('/api/auth', authRoutes);
 
 module.exports = app;

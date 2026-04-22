@@ -20,7 +20,8 @@ export const Sidebar = ({ isOpen }: SidebarProps) => {
   const menuItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Reservar', path: '/reservas', icon: BookOpen },
-    { name: 'Evaluaciones', path: '/evaluaciones', icon: ClipboardList },
+    { name: 'Mis Evaluaciones', path: '/evaluaciones', icon: ClipboardList },
+    { name: 'Gestión Evaluaciones', path: '/admin-evaluaciones', icon: ClipboardList },
     { name: 'Calendario', path: '/calendario', icon: Calendar },
     { name: 'Inventario', path: '/inventario', icon: Package },
   ];
