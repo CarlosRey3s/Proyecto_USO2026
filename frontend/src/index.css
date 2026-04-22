@@ -14,7 +14,7 @@
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f9fafb;
+  background-color: #ebebeb;
   /* Fondo gris súper claro */
   color: #1f2937;
 }
@@ -40,9 +40,11 @@ body {
   /* 24px */
 }
 
+
+
 /* ── SIDEBAR (Menú Lateral) ── */
 .sidebar {
-  width: 256px;
+  width: 235px;
   background-color: #ffffff;
   border-right: 1px solid #e5e7eb;
   display: flex;
@@ -110,28 +112,28 @@ body {
   font-weight: 500;
 }
 
-/* ── NAVBAR (Menú Superior) ── */
+/* =======================================================
+   NAVBAR (Estilo Teams / Corporativo)
+   ======================================================= */
 .navbar {
-  height: 80px;
+  height: 56px; 
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5rem;
+  /* Aumentamos un poco el padding horizontal para despegarlo del borde de la pantalla */
+  padding: 0 1.5rem; 
+  flex-shrink: 0;
+  z-index: 100;
 }
 
-.navbar-left,
-.navbar-right {
+.navbar-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
-}
-
-.navbar-title {
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: #1f2937;
+  /* Reducimos el gap para que el icono y el título se vean como un grupo unido */
+  gap: 0.75rem; 
+  flex: 1; 
 }
 
 .icon-button {
@@ -139,186 +141,122 @@ body {
   border: none;
   cursor: pointer;
   color: #4b5563;
-  padding: 0.5rem;
-  border-radius: 0.375rem;
+  /* En lugar de padding, le damos dimensiones fijas para un hover perfecto */
+  width: 60px;
+  height: 36px;
+  border-radius: 8px; /* Bordes un poco más suaves */
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
+  position: relative; 
+  /* Evitamos el contorno azul por defecto de los navegadores al hacer clic */
+  outline: none; 
 }
 
 .icon-button:hover {
   background-color: #f3f4f6;
-}
-
-.user-profile-mini {
-  width: 40px;
-  height: 40px;
-  background-color: #d1d5db;
-  border-radius: 50%;
-}
-/*estilos de calendario*/
-/* Sobrescribiendo estilos de React Big Calendar para igualar el diseño */
-/* Layout del Calendario */
-.calendar-page-wrapper {
-  display: flex;
-  height: 100%;
-  gap: 1.5rem;
-}
-
-.calendar-main-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  padding: 1.5rem;
-}
-
-/* Toolbar Personalizada */
-.calendar-toolbar-custom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.toolbar-left, .toolbar-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.nav-arrows {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.btn-hoy {
-  background-color: #0f766e;
-  color: white;
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.btn-hoy:hover { background-color: #0d9488; }
-
-.btn-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-}
-
-.toolbar-label {
-  font-size: 1.5rem;
-  font-weight: 300;
-  color: #4b5563;
-  margin: 0;
-  text-transform: capitalize;
-}
-
-/* Botones de Vista (Semana/Mes) */
-.btn-view, .btn-view-icon {
-  border: none;
-  background-color: #f3f4f6;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-view {
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  font-weight: 500;
-}
-
-.btn-view-icon {
-  padding: 0.6rem;
-  border-radius: 50%;
-  display: flex;
-}
-
-.btn-view.active, .btn-view-icon.active {
-  background-color: #fcd34d;
   color: #111827;
 }
 
-/* Sidebar Derecho */
-.calendar-sidebar-right {
-  width: 256px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.btn-crear {
-  width: 100%;
-  background-color: #fcd34d;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 6px;
+.navbar-title {
+  font-size: 1.125rem; 
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
+  color: #1f2937;
+  margin: 0;
+  /* Un pequeño ajuste para alinear visualmente el texto con el icono */
+  line-height: 1; 
+}/* --- Buscador Central (El Protagonista) --- */
 
-.mini-calendar-placeholder {
-  background-color: #1f2937;
-  color: white;
-  height: 160px;
-  border-radius: 6px;
+.navbar-center {
+  flex: 1.5; /* Ocupa más espacio que los lados */
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
-.mis-laboratorios-card {
-  background-color: #0f766e;
-  color: white;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.card-header {
-  padding: 0.75rem;
-  border-bottom: 1px solid #0d9488;
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px; /* Ancho máximo prominente */
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.search-input-navbar {
+  width: 100%;
+  padding: 0.4rem 1rem 0.4rem 2.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.875rem; /* 14px */
+  background-color: #f9fafb;
+  color: #1f2937;
+  transition: all 0.2s ease;
+}
+
+.search-input-navbar:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #22806B; /* Tu color verde en el foco */
+  box-shadow: 0 0 0 2px rgba(34, 128, 107, 0.1);
+}
+
+/* --- Lado Derecho --- */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+.user-info-navbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-greeting {
+  font-size: 0.875rem; /* 14px */
   font-weight: 500;
+  color: #4b5563;
 }
 
-.card-body {
-  padding: 0.75rem;
+.user-avatar-navbar {
+  width: 32px;
+  height: 32px;
+  background-color: #FACB4B; /* Tu color amarillo */
+  color: #111827;
+  border-radius: 50%; /* Mantener redondo para avatares es buena UX */
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
   font-size: 0.875rem;
 }
 
-.btn-exportar {
-  width: 100%;
-  background-color: #fb7185;
-  color: white;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: auto;
-  cursor: pointer;
+/* Detalle elegante: un punto de notificación rojo en la campana */
+.notification-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background-color: #ef4444; /* Rojo de alerta */
+  border: 2px solid #ffffff;
+  border-radius: 50%;
 }
+
+/* Media query para ocultar el saludo en pantallas pequeñas si es necesario */
+@media (max-width: 768px) {
+  .user-greeting {
+    display: none;
+  }
+}
+

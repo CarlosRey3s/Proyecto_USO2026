@@ -1,10 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
+// 1. Importamos los iconos que necesitamos
+import { LayoutDashboard, Calendar, ClipboardList, BookOpen, Package,  } from 'lucide-react';
+// import '../../css/Sidebar.css'; // <-- Descomenta y ajusta esta ruta
 
-// Definimos la propiedad que recibe
 interface SidebarProps {
   isOpen: boolean;
 }
-export const Sidebar = ({isOpen}: SidebarProps) => {
+
+export const Sidebar = ({ isOpen }: SidebarProps) => {
   const location = useLocation();
 
   const isActive = (path: string) => {
@@ -13,36 +16,32 @@ export const Sidebar = ({isOpen}: SidebarProps) => {
     return false;
   };
 
-  const getTitle = () => {
-    if (isActive("/dashboard")) return "Dashboard";
-    if (isActive("/reservas")) return "Reservación Estudiante";
-    if (isActive("/evaluaciones")) return "Evaluaciones";
-    if (isActive("/calendario")) return "Calendario";
-    if (isActive("/inventario")) return "Inventario";
-    return "Menú Estudiante";
-  };
-
+  // 2. Añadimos la propiedad 'icon' a cada item
   const menuItems = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Reservar', path: '/reservas' },
-    { name: 'Evaluaciones', path: '/evaluaciones' },
-    { name: 'Calendario', path: '/calendario' },
-    { name: 'Inventario', path: '/inventario' },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Reservar', path: '/reservas', icon: BookOpen },
+    { name: 'Evaluaciones', path: '/evaluaciones', icon: ClipboardList },
+    { name: 'Calendario', path: '/calendario', icon: Calendar },
+    { name: 'Inventario', path: '/inventario', icon: Package },
   ];
 
   return (
-    //Si isOpne es falso, le regresamos la clase 'Collapsed'
-   <aside className={`sidebar ${!isOpen ? 'collapsed' : ''}`}>
-      <div className="sidebar-logo-container">
+    <aside className={`sidebar ${!isOpen ? 'collapsed' : ''}`}>
+      
+      {/* 3. Nueva Cabecera Compacta con Buscador */}
+      <div className="sidebar-header">
+         <div className="sidebar-logo-container">
         <div className="sidebar-avatar">
           USO
         </div>
       </div>
+      </div>
+
       <nav className="menu">
-        <h3>{getTitle()}</h3>
         <ul className="sidebar-nav">
           {menuItems.map((item) => {
             const active = isActive(item.path);
+            const Icon = item.icon; // Extraemos el componente del icono
             
             return (
               <li key={item.name}>
@@ -50,7 +49,9 @@ export const Sidebar = ({isOpen}: SidebarProps) => {
                   to={item.path}
                   className={`sidebar-link ${active ? 'active' : ''}`}
                 >
-                  {item.name}
+                  {/* 4. Renderizamos el icono a un tamaño elegante (18px) */}
+                  <Icon size={18} className="link-icon" />
+                  <span className="link-text">{item.name}</span>
                 </Link>
               </li>
             );
@@ -58,8 +59,12 @@ export const Sidebar = ({isOpen}: SidebarProps) => {
         </ul>
       </nav>
 
+      {/* Parte inferior más compacta */}
       <div className="sidebar-bottom">
-        Hello, Name
+        <div className="user-profile-mini"></div>
+        <div className="user-info">
+          <span className="user-name">Hola, Astrid</span>
+        </div>
       </div>
     </aside>
   );

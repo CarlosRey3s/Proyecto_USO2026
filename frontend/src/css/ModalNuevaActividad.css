@@ -1,0 +1,210 @@
+/* =======================================================
+   MODAL NUEVA ACTIVIDAD
+   ======================================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 10px 10px 10px 10px;
+  border: 2px solid #22806B;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden; /* CAMBIO AQUÍ: Oculta lo que se salga de la caja principal */
+}
+
+.modal-header {
+  padding:0.5rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0; /* NUEVO: Evita que el título se aplaste */
+}
+
+/* 7. Título más pequeño */
+.modal-header h2 {
+  font-size: 1.05rem; 
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto; /* CAMBIO AQUÍ: La barra ahora vive solo adentro del cuerpo */
+}
+
+.actividad-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.form-full-width {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-group label, .form-full-width > label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* 1. Bordes de cajas de texto color #AD868A */
+.input-field {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #AD868A; /* Color actualizado */
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  background-color: #f9fafb;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #AD868A;
+  box-shadow: 0 0 0 2px rgba(173, 134, 138, 0.2); /* Sombra suave con el mismo color */
+}
+
+.fecha-hora-group {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+}
+
+/* 3. Espacio entre repetir y tipo de actividad */
+.mb-espacio {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+
+/* 5. Caja de búsqueda más ancha */
+.search-inventario {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-input-wide {
+  width: 100%; /* Fuerza a que ocupe todo el espacio disponible */
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #9ca3af;
+}
+
+.pl-8 { padding-left: 2rem !important; }
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+}
+
+.status-disponible { color: #22c55e; }
+.status-bajo { color: #eab308; }
+.btn-remove-item { background: none; border: none; cursor: pointer; color: #9ca3af; }
+
+.btn-add-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #FACB4B;
+  color: #1f2937;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.textarea-nota {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* 6. Botones alineados a la izquierda */
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  flex-shrink: 0; /* NUEVO: Evita que los botones se aplasten */
+}
+
+.btn-cancelar {
+  background-color: #FACB4B;
+  color: #1f2937;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-guardar {
+  background-color: #22806B;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Estilo personalizado para la barra de desplazamiento */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background-color: #AD868A; /* El color de tu diseño */
+  border-radius: 4px;
+}
