@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 // 1. Importamos los iconos que necesitamos
-import { LayoutDashboard, Calendar, ClipboardList, BookOpen, Package, } from 'lucide-react';
+import { LayoutDashboard, Calendar, ClipboardList, BookOpen, Package, ShieldCheck } from 'lucide-react';
 // import '../../css/Sidebar.css'; // <-- Descomenta y ajusta esta ruta
 
 interface SidebarProps {
@@ -18,18 +18,13 @@ export const Sidebar = ({ isOpen }: SidebarProps) => {
 
   // 2. Añadimos la propiedad 'icon' a cada item
   const menuItems = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Reservar', path: '/reservas' },
-    { name: 'Evaluaciones', path: '/evaluaciones' },
-    { name: 'Calendario', path: '/calendario' },
-    { name: 'Inventario', path: '/inventario' },
-    { name: 'Dashboard Admin', path: '/admin/dashboard' },
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Reservar', path: '/reservas', icon: BookOpen },
     { name: 'Mis Evaluaciones', path: '/evaluaciones', icon: ClipboardList },
     { name: 'Gestión Evaluaciones', path: '/admin-evaluaciones', icon: ClipboardList },
     { name: 'Calendario', path: '/calendario', icon: Calendar },
     { name: 'Inventario', path: '/inventario', icon: Package },
+    { name: 'Dashboard Admin', path: '/admin/dashboard', icon: ShieldCheck },
   ];
 
   return (
