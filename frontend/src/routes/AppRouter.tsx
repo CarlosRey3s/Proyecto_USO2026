@@ -9,7 +9,7 @@ import Dashboard from "../pages/estudiante/Dashboard";
 import Reservar from "../pages/estudiante/Reservar";
 import { Evaluaciones } from '../pages/estudiante/Evaluaciones';
 import RealizarEvaluacion from "../pages/estudiante/RealizarEvaluacion";
-import { CalendarioView, InventarioView, EvaluacionesAdminView } from '../pages/admin';
+import { CalendarioView, InventarioView, EvaluacionesAdminView, DashboardAdmin } from '../pages/admin';
 
 export const AppRouter = () => {
   return (
@@ -30,6 +30,7 @@ export const AppRouter = () => {
             
             {/* Rutas de admin (podemos protegerlas más específicamente si queremos) */}
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                <Route path="admin/dashboard" element={<DashboardAdmin />} />
                 <Route path="calendario" element={<CalendarioView />} />
                 <Route path="inventario" element={<InventarioView />} />
                 <Route path="admin-evaluaciones" element={<EvaluacionesAdminView />} />
