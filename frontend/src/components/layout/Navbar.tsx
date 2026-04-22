@@ -16,6 +16,7 @@ export const Navbar = ({ onToggleMenu }: NavbarProps) => {
     if (path === '/evaluaciones') return 'Evaluaciones';
     if (path === '/calendario') return 'Calendario';
     if (path === '/inventario') return 'Inventario';
+    if (path === '/admin-evaluaciones') return 'Gestión de Evaluaciones';
     if (path === '/realizar-evaluacion') return 'Realizando Evaluación';
     return 'Proyecto USO';
   };

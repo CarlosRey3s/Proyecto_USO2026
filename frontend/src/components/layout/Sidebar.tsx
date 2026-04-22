@@ -19,6 +19,7 @@ export const Sidebar = ({isOpen}: SidebarProps) => {
     if (isActive("/evaluaciones")) return "Evaluaciones";
     if (isActive("/calendario")) return "Calendario";
     if (isActive("/inventario")) return "Inventario";
+    if (isActive("/admin-evaluaciones")) return "Gestión de Evaluaciones";
     return "Menú Estudiante";
   };
 
@@ -28,6 +29,7 @@ export const Sidebar = ({isOpen}: SidebarProps) => {
     { name: 'Evaluaciones', path: '/evaluaciones' },
     { name: 'Calendario', path: '/calendario' },
     { name: 'Inventario', path: '/inventario' },
+    { name: 'Gestión Eval.', path: '/admin-evaluaciones' },
   ];
 
   return (

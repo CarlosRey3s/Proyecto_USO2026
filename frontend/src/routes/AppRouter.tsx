@@ -5,7 +5,7 @@ import Dashboard from "../pages/estudiante/Dashboard";
 import Reservar from "../pages/estudiante/Reservar";
 import { Evaluaciones } from '../pages/estudiante/Evaluaciones';
 import RealizarEvaluacion from "../pages/estudiante/RealizarEvaluacion";
-import { CalendarioView } from '../pages/admin/Calendario'; 
+import { CalendarioView, InventarioView, EvaluacionesAdminView } from '../pages/admin';
 
 export const AppRouter = () => {
   return (
@@ -19,6 +19,8 @@ export const AppRouter = () => {
           <Route path="evaluaciones" element={<Evaluaciones />} />
           <Route path="realizar-evaluacion" element={<RealizarEvaluacion />} />
           <Route path="calendario" element={<CalendarioView />} />
+          <Route path="inventario" element={<InventarioView />} />
+          <Route path="admin-evaluaciones" element={<EvaluacionesAdminView />} />
           
           {/* Redirección por defecto al dashboard */}
           <Route index element={<Navigate to="/dashboard" replace />} />
