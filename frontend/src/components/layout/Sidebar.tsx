@@ -28,6 +28,7 @@ export const Sidebar = ({isOpen}: SidebarProps) => {
     { name: 'Evaluaciones', path: '/evaluaciones' },
     { name: 'Calendario', path: '/calendario' },
     { name: 'Inventario', path: '/inventario' },
+    { name: 'Dashboard Admin', path: '/admin/dashboard' },
   ];
 
   return (
