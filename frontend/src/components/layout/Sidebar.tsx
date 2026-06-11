@@ -1,59 +1,107 @@
 import { Link, useLocation } from 'react-router-dom';
-// 1. Importamos los iconos que necesitamos
-import { LayoutDashboard, Calendar, ClipboardList, BookOpen, Package, ShieldCheck } from 'lucide-react';
-// import '../../css/Sidebar.css'; // <-- Descomenta y ajusta esta ruta
+import {
+  LayoutDashboard,
+  Calendar,
+  ClipboardList,
+  BookOpen,
+  Package,
+  ShieldCheck,
+  LogOut,
+  ChevronLeft,
+} from 'lucide-react';
+import '../../index.css';
 
 interface SidebarProps {
   isOpen: boolean;
+  onToggle?: () => void;
+  userName?: string;
+  userRole?: string;
 }
 
-export const Sidebar = ({ isOpen }: SidebarProps) => {
+const menuItems = [
+  { name: 'Dashboard',             path: '/dashboard',          icon: LayoutDashboard },
+  { name: 'Reservar',              path: '/reservas',           icon: BookOpen        },
+  { name: 'Mis Evaluaciones',      path: '/evaluaciones',       icon: ClipboardList   },
+  { name: 'Gestión Evaluaciones',  path: '/admin-evaluaciones', icon: ClipboardList   },
+  { name: 'Calendario',            path: '/calendario',         icon: Calendar        },
+  { name: 'Inventario',            path: '/inventario',         icon: Package         },
+  { name: 'Dashboard Admin',       path: '/admin/dashboard',    icon: ShieldCheck     },
+];
+
+export const Sidebar = ({
+  isOpen,
+  onToggle,
+  userName  = 'Astrid',
+  userRole  = 'Administrador',
+}: SidebarProps) => {
   const location = useLocation();
 
   const isActive = (path: string) => {
-    if (path === "/dashboard" && location.pathname === "/dashboard") return true;
-    if (path !== "/dashboard" && location.pathname.startsWith(path)) return true;
-    return false;
+    if (path === '/dashboard') return location.pathname === '/dashboard';
+    return location.pathname.startsWith(path);
   };
 
-  // 2. Añadimos la propiedad 'icon' a cada item
-  const menuItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Reservar', path: '/reservas', icon: BookOpen },
-    { name: 'Mis Evaluaciones', path: '/evaluaciones', icon: ClipboardList },
-    { name: 'Gestión Evaluaciones', path: '/admin-evaluaciones', icon: ClipboardList },
-    { name: 'Calendario', path: '/calendario', icon: Calendar },
-    { name: 'Inventario', path: '/inventario', icon: Package },
-    { name: 'Dashboard Admin', path: '/admin/dashboard', icon: ShieldCheck },
-  ];
+  /* Iniciales para el avatar */
+  const initials = userName
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
-    <aside className={`sidebar ${!isOpen ? 'collapsed' : ''}`}>
+    <aside className={`sb${!isOpen ? ' sb--collapsed' : ''}`}>
 
-      {/* 3. Nueva Cabecera Compacta con Buscador */}
-      <div className="sidebar-header">
-        <div className="sidebar-logo-container">
-          <div className="sidebar-avatar">
-            USO
-          </div>
+      {/* ── Toggle button ── */}
+      {onToggle && (
+        <button
+          className="sb__toggle"
+          onClick={onToggle}
+          aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+        >
+          <ChevronLeft size={16} />
+        </button>
+      )}
+
+      {/* ── Header / Avatar ── */}
+      <div className="sb__header">
+        <div className="sb__avatar">
+          {initials}
+        </div>
+        <div className="sb__brand">
+          <span className="sb__brand-name">USO</span>
+          <span className="sb__brand-sub">Laboratorios</span>
         </div>
       </div>
 
-      <nav className="menu">
-        <ul className="sidebar-nav">
+      {/* ── Divider ── */}
+      <div className="sb__divider" />
+
+      {/* ── Navigation ── */}
+      <nav className="sb__nav" aria-label="Menú principal">
+        <ul className="sb__list">
           {menuItems.map((item) => {
             const active = isActive(item.path);
-            const Icon = item.icon; // Extraemos el componente del icono
+            const Icon   = item.icon;
 
             return (
-              <li key={item.name}>
+              <li key={item.name} className="sb__item">
                 <Link
                   to={item.path}
-                  className={`sidebar-link ${active ? 'active' : ''}`}
+                  className={`sb__link${active ? ' sb__link--active' : ''}`}
+                  aria-current={active ? 'page' : undefined}
                 >
-                  {/* 4. Renderizamos el icono a un tamaño elegante (18px) */}
-                  <Icon size={18} className="link-icon" />
-                  <span className="link-text">{item.name}</span>
+                  {/* Active indicator bar */}
+                  {active && <span className="sb__indicator" />}
+
+                  <span className="sb__icon">
+                    <Icon size={18} strokeWidth={active ? 2.2 : 1.8} />
+                  </span>
+
+                  <span className="sb__label">{item.name}</span>
+
+                  {/* Active dot badge */}
+                  {active && <span className="sb__dot" />}
                 </Link>
               </li>
             );
@@ -61,11 +109,19 @@ export const Sidebar = ({ isOpen }: SidebarProps) => {
         </ul>
       </nav>
 
-      {/* Parte inferior más compacta */}
-      <div className="sidebar-bottom">
-        <div className="user-profile-mini"></div>
-        <div className="user-info">
-          <span className="user-name">Hola, Astrid</span>
+      {/* ── Bottom user section ── */}
+      <div className="sb__bottom">
+        <div className="sb__divider" />
+
+        <div className="sb__user">
+          <div className="sb__user-avatar">{initials}</div>
+          <div className="sb__user-info">
+            <span className="sb__user-name">Hola, {userName}</span>
+            <span className="sb__user-role">{userRole}</span>
+          </div>
+          <button className="sb__logout" aria-label="Cerrar sesión" title="Cerrar sesión">
+            <LogOut size={15} />
+          </button>
         </div>
       </div>
     </aside>

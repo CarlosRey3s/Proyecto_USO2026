@@ -1,210 +1,405 @@
-/* =======================================================
-   MODAL NUEVA ACTIVIDAD
-   ======================================================= */
-.modal-overlay {
-  position: fixed;
+/* ============================================
+   NuevaActividad.css
+   Estilos para el modal de nueva actividad
+   del calendario (vista admin)
+   ============================================ */
+
+/* Overlay */
+.na-overlay {
+    position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background: rgba(34, 128, 107, 0.15); /* Fondo verde traslúcido */
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal */
+.na-modal {
+background: #ffffff;
+  border-radius: 16px;
+  width: 780px;
+  max-width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+
+    border-top: 4px solid #1D9E75;
+}
+
+/* Header */
+.na-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.na-header-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #171717; /* Texto blanco en cabecera */
+}
+
+.na-header-sub {
+  font-size: 16px;
+color: #222222; /* Verde clarito para el subtítulo */
+  margin-top: 2px;
+}
+
+.na-close {
+  background: none;
+  border: none;
+  color: #124836;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.na-close:hover {
+  background: rgba(15, 138, 103, 0.3);
+}
+
+/* Body */
+.na-body {
+  padding: 20px 28px 8px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Labels */
+.na-field-label {
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  color: #888;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.na-section-lbl {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+/* Selector de tipo */
+.na-tipo-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.na-tipo-btn {
+  border: 0.5px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 10px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+  background: #ffffff;
+}
+
+.na-tipo-btn:hover {
+  border-color: #1d9e75;
+}
+
+/* Tipo activo — Clase */
+.na-tipo-clase.na-tipo-on {
+  border: 1.5px solid #1d9e75;
+  background: #f7fdf9;
+}
+
+/* Tipo activo — Mantenimiento */
+.na-tipo-mant.na-tipo-mant-on {
+  border: 1.5px solid #e24b4a;
+  background: #fff8f8;
+}
+
+/* Tipo activo — Reserva */
+.na-tipo-res.na-tipo-res-on {
+  border: 1.5px solid #f0c04a;
+  background: #fffcf3;
+}
+
+.na-tipo-ico {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  margin: 0 auto 6px;
 }
 
-.modal-container {
-  background-color: #ffffff;
-  width: 100%;
-  max-width: 800px;
-  border-radius: 10px 10px 10px 10px;
-  border: 2px solid #22806B;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh;
-  overflow: hidden; /* CAMBIO AQUÍ: Oculta lo que se salga de la caja principal */
-}
+.na-ico-clase { background: #e1f5ee; }
+.na-ico-mant  { background: #fcebeb; }
+.na-ico-res   { background: #faeeda; }
 
-.modal-header {
-  padding:0.5rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0; /* NUEVO: Evita que el título se aplaste */
-}
-
-/* 7. Título más pequeño */
-.modal-header h2 {
-  font-size: 1.05rem; 
+.na-tipo-name {
+  font-size: 12px;
   font-weight: 500;
-  color: #1f2937;
+  color: #1a1a1a;
 }
 
-.btn-close {
-  background: none;
+.na-tipo-desc {
+  font-size: 10px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* Separador */
+.na-sep {
   border: none;
-  cursor: pointer;
-  color: #6b7280;
+  border-top: 0.5px solid #e5e5e5;
+  margin: 16px 0;
 }
 
-.modal-body {
-  padding: 1.5rem;
-  overflow-y: auto; /* CAMBIO AQUÍ: La barra ahora vive solo adentro del cuerpo */
+/* Campos */
+.na-fields {
+  display: block;
 }
 
-.actividad-form {
+.na-field-group {
+  margin-bottom: 12px;
+}
+
+/* Grids */
+.na-row2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-.form-full-width {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.form-group label, .form-full-width > label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #374151;
-}
-
-/* 1. Bordes de cajas de texto color #AD868A */
-.input-field {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #AD868A; /* Color actualizado */
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  background-color: #f9fafb;
-}
-
-.input-field:focus {
-  outline: none;
-  border-color: #AD868A;
-  box-shadow: 0 0 0 2px rgba(173, 134, 138, 0.2); /* Sombra suave con el mismo color */
-}
-
-.fecha-hora-group {
+.na-row3 {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-/* 3. Espacio entre repetir y tipo de actividad */
-.mb-espacio {
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-
-
-/* 5. Caja de búsqueda más ancha */
-.search-inventario {
-  position: relative;
-  display: flex;
-  align-items: center;
+/* Inputs */
+.na-input {
   width: 100%;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #1a1a1a;
+  font-family: inherit;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.15s;
 }
 
-.search-input-wide {
-  width: 100%; /* Fuerza a que ocupe todo el espacio disponible */
+.na-input:focus {
+  border-color: #1d9e75;
 }
 
-.search-icon {
-  position: absolute;
-  left: 0.75rem;
-  color: #9ca3af;
+.na-input::placeholder {
+  color: #aaa;
+}
+/* Ajuste de inputs para que se vean más limpios */
+.na-input, .na-select, .na-textarea {
+  border: 1.5px solid #e2e8f0; /* Borde un poco más visible */
+  background: #f8fafc;
+}
+.na-input:focus {
+  border-color: #1a3a34; /* Foco color verde oscuro */
+}
+/* Select */
+.na-select {
+  width: 100%;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: #ffffff;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  font-family: inherit;
 }
 
-.pl-8 { padding-left: 2rem !important; }
+.na-select:focus {
+  border-color: #1d9e75;
+}
 
-.item-row {
+.na-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Textarea */
+.na-textarea {
+  width: 100%;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: #ffffff;
+  resize: none;
+  height: 70px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.na-textarea:focus {
+  border-color: #1d9e75;
+}
+
+.na-textarea::placeholder {
+  color: #aaa;
+}
+
+/* Contador de personas */
+.na-num-row {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.na-num-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 0.5px solid #e5e5e5;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1a1a;
+  font-size: 16px;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.na-num-btn:hover {
+  border-color: #1d9e75;
+  color: #1d9e75;
+}
+
+.na-num-val {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a;
+  min-width: 26px;
+  text-align: center;
+}
+
+/* Recurrencia */
+.na-recur-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.na-recur-select {
+  flex: 1;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: #ffffff;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.na-recur-select:focus {
+  border-color: #1d9e75;
+}
+
+/* Footer */
+.na-footer {
+  padding: 14px 20px;
+  border-top: 0.5px solid #e5e5e5;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 0.875rem;
+  flex-shrink: 0;
+  gap: 12px;
 }
 
-.status-disponible { color: #22c55e; }
-.status-bajo { color: #eab308; }
-.btn-remove-item { background: none; border: none; cursor: pointer; color: #9ca3af; }
-
-.btn-add-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #FACB4B;
-  color: #1f2937;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  width: fit-content;
+.na-footer-tip {
+  font-size: 11px;
+  color: #888;
+  flex: 1;
 }
 
-.textarea-nota {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* 6. Botones alineados a la izquierda */
-.modal-footer {
-  padding: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+.na-footer-btns {
   display: flex;
-  justify-content: flex-start;
-  gap: 1rem;
-  flex-shrink: 0; /* NUEVO: Evita que los botones se aplasten */
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-.btn-cancelar {
-  background-color: #FACB4B;
-  color: #1f2937;
-  padding: 0.5rem 1.5rem;
+.na-btn-cancel {
+ padding: 10px 24px;
+  background-color: #E2E8F0;
+  color: #475569;
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.btn-guardar {
-  background-color: #22806B;
+.na-btn-cancel:hover {
+  background-color: var(--dorado);
+  color: #000;
+}
+
+.na-btn-save {
+   padding: 10px 24px;
+  background-color: var(--verde);
   color: white;
-  padding: 0.5rem 1.5rem;
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-/* Estilo personalizado para la barra de desplazamiento */
-.modal-body::-webkit-scrollbar {
-  width: 8px;
+.na-btn-save:hover:not(:disabled) {
+  background: #e8b73e;
 }
 
-.modal-body::-webkit-scrollbar-track {
-  background: transparent;
+.na-btn-save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
-.modal-body::-webkit-scrollbar-thumb {
-  background-color: #AD868A; /* El color de tu diseño */
-  border-radius: 4px;
+/* Botón guardar — variante mantenimiento */
+.na-btn-save.na-btn-save-mant {
+  background: #AD868A;
+  color: #ffffff;
+}
+
+.na-btn-save.na-btn-save-mant:hover:not(:disabled) {
+  background: #c73b3a;
 }

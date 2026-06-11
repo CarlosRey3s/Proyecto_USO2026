@@ -9,6 +9,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 // Importa tu nuevo modal (ajusta la ruta según donde tengas CalendarioView)
 import { ModalNuevaActividad } from '../../components/shared/ModalNuevaActividad';
 import '../../css/calendario.css';
+import { formatDistanceStrictWithOptions } from 'date-fns/fp';
 
 const locales = { 'es': es };
 const localizer = dateFnsLocalizer({
@@ -275,10 +276,38 @@ export const CalendarioView = () => {
   return (
     <div className="calendar-page-wrapper">
       {/* Añade el modal en cualquier parte superior del return */}
-      <ModalNuevaActividad 
-        isOpen={modalAbierto} 
-        onClose={() => setModalAbierto(false)} 
-      />
+    {modalAbierto && (
+        <ModalNuevaActividad 
+          onClose={() => setModalAbierto(false)} 
+          onGuardar={async (data) => {
+            console.log("Datos listos para enviar al backend:", data);
+
+            try {
+              // Aquí iría tu lógica para enviar 'data' al backend
+              const respuesta = await fetch('http://localhost:4000/api/actividades', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              //convertimos la respuesta del backend a json
+              const resultado = await respuesta.json();
+               if( respuesta.ok) {
+                console.log("Actividadcreada con exito:", resultado);
+                // Opcional: aqui podra disparar una recarga de eventos en el calendario
+               }else{
+                console.error("Error al crear actividad:", resultado);
+                alert("Error al crear actividad: " + resultado.message);
+               }
+
+            } catch (error) {
+              console.error("Error al enviar datos al backend:", error);
+              alert("No se pudo conectar con el servidor para crear la actividad.");
+            }
+          }}
+        />
+      )}
       <div className="calendar-main-container">
         <Calendar
           localizer={localizer}
