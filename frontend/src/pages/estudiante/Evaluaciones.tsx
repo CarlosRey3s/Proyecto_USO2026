@@ -70,13 +70,13 @@ export const Evaluaciones: React.FC = () => {
 
             <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "10px" }}>
               <span style={{ color: "var(--rosado)", fontSize: "16px", fontWeight: "bold" }}>
-                Evaluacion Requerida
+                Cuestionario Pendiente
               </span>
               <span 
                 style={{ color: "var(--verde)", fontSize: "16px", fontWeight: "bold", cursor: "pointer" }}
                 onClick={() => navigate('/realizar-evaluacion')}
               >
-                Realizar evaluación
+                Llenar cuestionario
               </span>
             </div>
           </div>

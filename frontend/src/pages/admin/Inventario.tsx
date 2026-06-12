@@ -8,6 +8,7 @@ interface InventoryItem {
   name: string;
   code: string;
   category: string;
+  laboratory: string;
   location: string;
   stock: number;
   status: 'Disponible' | 'Agotado' | 'En Mantenimiento';
@@ -25,6 +26,7 @@ export const InventarioView = () => {
       name: 'Baso de Agua',
       code: '678fh',
       category: 'Vidrieria',
+      laboratory: 'Laboratorio 1',
       location: 'Estante A',
       stock: 39,
       status: 'Disponible'
@@ -34,7 +36,8 @@ export const InventarioView = () => {
       name: 'Microscopio Binocular',
       code: 'MB-001',
       category: 'Equipos',
-      location: 'Laboratorio 1',
+      laboratory: 'Laboratorio 1',
+      location: 'Mesa 3',
       stock: 5,
       status: 'Disponible'
     },
@@ -43,6 +46,7 @@ export const InventarioView = () => {
       name: 'Tubo de Ensayo',
       code: 'TE-45',
       category: 'Vidrieria',
+      laboratory: 'Laboratorio 2',
       location: 'Estante B',
       stock: 120,
       status: 'Disponible'
@@ -52,6 +56,7 @@ export const InventarioView = () => {
       name: 'Reactivo HCl',
       code: 'R-HCl-02',
       category: 'Químicos',
+      laboratory: 'Laboratorio 3',
       location: 'Almacén Central',
       stock: 0,
       status: 'Agotado'
@@ -61,7 +66,8 @@ export const InventarioView = () => {
       name: 'Centrifugadora',
       code: 'CF-99',
       category: 'Equipos',
-      location: 'Laboratorio 3',
+      laboratory: 'Laboratorio 3',
+      location: 'Mesa 1',
       stock: 1,
       status: 'En Mantenimiento'
     }
@@ -120,9 +126,16 @@ export const InventarioView = () => {
         </select>
 
         <select className="filter-select">
+          <option value="">Laboratorio</option>
+          <option value="lab1">Laboratorio 1</option>
+          <option value="lab2">Laboratorio 2</option>
+          <option value="lab3">Laboratorio 3</option>
+        </select>
+
+        <select className="filter-select">
           <option value="">Ubicación</option>
           <option value="estante">Estante</option>
-          <option value="laboratorio">Laboratorio</option>
+          <option value="mesa">Mesa</option>
           <option value="almacen">Almacén</option>
         </select>
 
@@ -140,7 +153,8 @@ export const InventarioView = () => {
             <tr>
               <th>Item</th>
               <th>Categoría</th>
-              <th>Laboratorio / Ubicación</th>
+              <th>Laboratorio</th>
+              <th>Ubicación</th>
               <th>Stock</th>
               <th>Estado</th>
               <th>Acción</th>
@@ -161,6 +175,7 @@ export const InventarioView = () => {
                   </div>
                 </td>
                 <td>{item.category}</td>
+                <td>{item.laboratory}</td>
                 <td>{item.location}</td>
                 <td>{item.stock}</td>
                 <td>
@@ -265,13 +280,18 @@ export const InventarioView = () => {
                   </div>
 
                   <div className="form-group" style={{ marginBottom: '15px' }}>
-                    <label>Ubicación Física</label>
+                    <label>Laboratorio</label>
                     <select>
-                      <option value="">Seleccione ubicación</option>
-                      <option value="estante_a">Estante A</option>
+                      <option value="">Seleccione laboratorio</option>
                       <option value="laboratorio_1">Laboratorio 1</option>
-                      <option value="almacen">Almacén Central</option>
+                      <option value="laboratorio_2">Laboratorio 2</option>
+                      <option value="laboratorio_3">Laboratorio 3</option>
                     </select>
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: '15px' }}>
+                    <label>Ubicación Física</label>
+                    <input type="text" placeholder="Ej. Estante A, Gaveta 3, Mesa 1" />
                   </div>
 
                   <div className="form-group">
