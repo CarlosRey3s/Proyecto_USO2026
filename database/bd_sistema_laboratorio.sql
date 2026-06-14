@@ -49,7 +49,7 @@ CREATE TABLE ITEMS_INVENTARIO (
     FK_laboratorio_id INT,
     nombre VARCHAR(100) NOT NULL,
     codigo_interno VARCHAR(50) UNIQUE,
-    numero_cas VARCHAR(50), 
+    numero_cas VARCHAR(50),
     categoria VARCHAR(50),
     ubicacion_fisica VARCHAR(100),
     unidad_medida VARCHAR(20),
@@ -104,25 +104,49 @@ CREATE TABLE RESERVA_ITEMS (
 -- 5. ACTIVIDADES
 -- ----------------------------------------------------------
 
+-- BASE: solo campos comunes a los 3 tipos
 CREATE TABLE ACTIVIDADES (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    FK_docente_id INT,
     FK_laboratorio_id INT NOT NULL,
     FK_creado_por INT NOT NULL,
-    titulo VARCHAR(150) NOT NULL,
-    tipo ENUM('clase', 'reserva', 'mant'),
+    tipo ENUM('clase', 'reserva', 'mantenimiento') NOT NULL,
     fecha_hora_inicio DATETIME NOT NULL,
     fecha_hora_fin DATETIME NOT NULL,
-    repetir_semanalmente TINYINT(1) DEFAULT 0,
-    num_estudiantes INT,
-    nota_adicional TEXT,
+    recurrencia ENUM('no_repite','diario','semanal','dias_habiles','mensual','personalizado') NOT NULL DEFAULT 'no_repite',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CHECK (fecha_hora_fin > fecha_hora_inicio),
-    FOREIGN KEY (FK_docente_id) REFERENCES USUARIOS(id),
     FOREIGN KEY (FK_laboratorio_id) REFERENCES LABORATORIOS(id),
     FOREIGN KEY (FK_creado_por) REFERENCES USUARIOS(id)
 );
 
+-- HIJA CLASE
+CREATE TABLE ACTIVIDADES_CLASE (
+    FK_actividad_id INT PRIMARY KEY,
+    materia VARCHAR(150) NOT NULL,
+    docente VARCHAR(100) NOT NULL,
+    num_estudiantes INT NOT NULL,
+    FOREIGN KEY (FK_actividad_id) REFERENCES ACTIVIDADES(id) ON DELETE CASCADE
+);
+
+-- HIJA MANTENIMIENTO
+CREATE TABLE ACTIVIDADES_MANTENIMIENTO (
+    FK_actividad_id INT PRIMARY KEY,
+    responsable VARCHAR(100) NOT NULL,
+    nota_adicional TEXT,
+    FOREIGN KEY (FK_actividad_id) REFERENCES ACTIVIDADES(id) ON DELETE CASCADE
+);
+
+-- HIJA RESERVA DIRECTA
+CREATE TABLE ACTIVIDADES_RESERVA (
+    FK_actividad_id INT PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    FK_mesa_id INT,
+    num_personas INT NOT NULL,
+    FOREIGN KEY (FK_actividad_id) REFERENCES ACTIVIDADES(id) ON DELETE CASCADE,
+    FOREIGN KEY (FK_mesa_id) REFERENCES MESAS(id) ON DELETE SET NULL
+);
+
+-- ITEMS USADOS EN RESERVA DIRECTA
 CREATE TABLE ACTIVIDAD_ITEMS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     FK_actividad_id INT NOT NULL,
