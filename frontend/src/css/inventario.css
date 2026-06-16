@@ -99,8 +99,9 @@
   background-color: var(--blanco);
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  overflow: visible; /* Importante para que no se corte el dropdown */
   border: 1px solid #F1F5F9;
+  min-height: 350px;
 }
 
 .inventory-table {

@@ -67,8 +67,26 @@ const programarActividad = async (datosModal, idUsuarioLogueado) => {
             
         } else if (tipo === 'reserva') {
             const queryHija = `INSERT INTO ACTIVIDADES_RESERVA (FK_actividad_id, titulo, Fk_mesa_id, num_personas) VALUES (?, ?, ?, ?)`;
-            // Usamos estacion en lugar de mesa porque así viene del Frontend
-            await connection.query(queryHija, [idGenerado, datosModal.titulo, datosModal.estacion || null, numPersonas]);
+            // Pasamos null a Fk_mesa_id para evitar error de tipo de dato (el frontend manda un string)
+            await connection.query(queryHija, [idGenerado, datosModal.titulo, null, numPersonas]);
+            
+            // Si hay equipos solicitados, registrarlos como Préstamo en el inventario
+            if (datosModal.equipos && datosModal.equipos.length > 0) {
+                const queryPrestamo = `
+                    INSERT INTO REPORTES_INVENTARIO (FK_item_id, FK_usuario_id, tipo_problema, descripcion, cantidad, estado)
+                    VALUES (?, ?, 'Préstamo', ?, ?, 'Pendiente')
+                `;
+                const descripcionReserva = `Solicitado para reserva: ${datosModal.titulo}`;
+                
+                for (const equipo of datosModal.equipos) {
+                    await connection.query(queryPrestamo, [
+                        equipo.id, 
+                        idUsuarioLogueado, 
+                        descripcionReserva, 
+                        equipo.cantidadRequerida || 1
+                    ]);
+                }
+            }
         }
 
         // 4. Confirmamos la transacción

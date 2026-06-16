@@ -9,7 +9,7 @@ import Dashboard from "../pages/estudiante/Dashboard";
 import Reservar from "../pages/estudiante/Reservar";
 import { Evaluaciones } from '../pages/estudiante/Evaluaciones';
 import RealizarEvaluacion from "../pages/estudiante/RealizarEvaluacion";
-import { CalendarioView, InventarioView, EvaluacionesAdminView, DashboardAdmin } from '../pages/admin';
+import { CalendarioView, InventarioView, EvaluacionesAdminView, DashboardAdmin, UsuariosView, LaboratoriosView, ReportesView } from '../pages/admin';
 
 export const AppRouter = () => {
   return (
@@ -34,6 +34,9 @@ export const AppRouter = () => {
                 <Route path="calendario" element={<CalendarioView />} />
                 <Route path="inventario" element={<InventarioView />} />
                 <Route path="admin-evaluaciones" element={<EvaluacionesAdminView />} />
+                <Route path="admin/usuarios" element={<UsuariosView />} />
+                <Route path="admin/laboratorios" element={<LaboratoriosView />} />
+                <Route path="admin/reportes" element={<ReportesView />} />
             </Route>
 
             {/* Redirección por defecto al dashboard */}

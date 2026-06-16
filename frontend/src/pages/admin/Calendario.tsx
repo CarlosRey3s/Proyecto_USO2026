@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Calendar as CalendarIcon, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, Printer } from 'lucide-react';
 import { Calendar, dateFnsLocalizer, type ToolbarProps, type View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay, isToday } from 'date-fns';
@@ -22,36 +22,16 @@ const localizer = dateFnsLocalizer({
 
 // ── 1. AGREGAMOS A QUÉ LABORATORIO PERTENECE CADA EVENTO ──
 export interface EventoLaboratorio {
+  id?: number;
   title: string;
   start: Date;
   end: Date;
   laboratorio: string; // <-- NUEVO: Para saber de qué lab es el evento
+  tipo?: string;
+  detalles?: any;
 }
 
-// Lista de todos nuestros laboratorios que existen
-const LABORATORIOS_DISPONIBLES = ['Lab de Redes', 'Lab de Computo'];
-
-// Eventos de prueba con su respectivo laboratorio asignado
-const eventosPrueba: EventoLaboratorio[] = [
-  {
-    title: 'Clase de Cisco CCNA',
-    start: new Date(2026, 3, 15, 9, 0),
-    end: new Date(2026, 3, 15, 12, 0),
-    laboratorio: 'Lab de Redes'
-  },
-  {
-    title: 'Mantenimiento de Servidores',
-    start: new Date(2026, 3, 16, 14, 0),
-    end: new Date(2026, 3, 16, 17, 0),
-    laboratorio: 'Lab de Redes'
-  },
-  {
-    title: 'Clase de Programación III',
-    start: new Date(2026, 3, 15, 13, 0),
-    end: new Date(2026, 3, 15, 16, 0),
-    laboratorio: 'Lab de Computo'
-  }
-];
+// Las actividades y laboratorios ahora se cargarán desde la BD
 
 const CustomHeader = ({date}: {date: Date}) => {
   //obtenemos el dia en texto corto y lo pasamos a mayusculas
@@ -112,14 +92,18 @@ const eventStyleGetter = (event: EventoLaboratorio) =>{
   let colorMargenIzquierdo = '#9ca3af';
 
 // Asignamos colores según el laboratorio para distinguirlos rápido
-  if (event.laboratorio === 'Lab de Redes') {
+  if (event.laboratorio.includes('Redes')) {
     backgroundColor = '#eff6ff'; // Azul muy claro
     borderColor = '#bfdbfe';
     colorMargenIzquierdo = '#3b82f6'; // Azul fuerte
-  } else if (event.laboratorio === 'Lab de Computo') {
+  } else if (event.laboratorio.includes('Computo') || event.laboratorio.includes('Cómputo') || event.laboratorio.includes('Sistemas')) {
     backgroundColor = '#f0fdf4'; // Verde muy claro
     borderColor = '#bbf7d0';
     colorMargenIzquierdo = '#22c55e'; // Verde fuerte
+  } else {
+    backgroundColor = '#fef2f2'; // Rojo muy claro
+    borderColor = '#fecaca';
+    colorMargenIzquierdo = '#ef4444'; // Rojo fuerte
   }
 return {
     style: {
@@ -226,16 +210,65 @@ const CustomToolbar = (toolbar: ToolbarProps<EventoLaboratorio>) => {
 };
 
 export const CalendarioView = () => {
-  const [fechaActual, setFechaActual] = useState(new Date(2026, 3, 15));
+  const [fechaActual, setFechaActual] = useState(new Date()); // Usar fecha actual real
   const [vistaActual, setVistaActual] = useState<View>('week');
+  
+  // Estados para datos de la BD
+  const [eventosDB, setEventosDB] = useState<EventoLaboratorio[]>([]);
+  const [laboratoriosDB, setLaboratoriosDB] = useState<{id: number, nombre: string}[]>([]);
+  
   // ── 2. NUEVOS ESTADOS PARA LOS LABORATORIOS ──
-  // Estado para saber qué laboratorios están marcados (por defecto, todos)
-  const [labsActivos, setLabsActivos] = useState<string[]>(LABORATORIOS_DISPONIBLES);
+  // Estado para saber qué laboratorios están marcados
+  const [labsActivos, setLabsActivos] = useState<string[]>([]);
   // Estado para saber si el menú está desplegado o contraído
   const [menuDesplegado, setMenuDesplegado] = useState(true);
 
   // Añade este nuevo estado para controlar el modal:
   const [modalAbierto, setModalAbierto] = useState(false);
+  // Estado para controlar el modal de detalles
+  const [eventoSeleccionado, setEventoSeleccionado] = useState<EventoLaboratorio | null>(null);
+
+  const cargarDatos = async () => {
+    try {
+      const [resLabs, resActs] = await Promise.all([
+        fetch('http://localhost:4000/api/laboratorios'),
+        fetch('http://localhost:4000/api/actividades')
+      ]);
+      const dataLabs = await resLabs.json();
+      const dataActs = await resActs.json();
+
+      let labsMap: Record<number, string> = {};
+      if (dataLabs.success) {
+        setLaboratoriosDB(dataLabs.data);
+        const nombresLabs = dataLabs.data.map((l: any) => l.nombre);
+        // Si no hay filtros activos, activamos todos por defecto
+        setLabsActivos(prev => prev.length === 0 ? nombresLabs : prev);
+        
+        dataLabs.data.forEach((l: any) => {
+          labsMap[l.id] = l.nombre;
+        });
+      }
+
+      if (dataActs.success) {
+        const eventosMapeados = dataActs.data.map((act: any) => ({
+          id: act.id,
+          title: act.title,
+          start: new Date(act.start),
+          end: new Date(act.end),
+          laboratorio: labsMap[act.fk_laboratorio_id] || 'Laboratorio Desconocido',
+          tipo: act.tipo,
+          detalles: act
+        }));
+        setEventosDB(eventosMapeados);
+      }
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+    }
+  };
+
+  useEffect(() => {
+    cargarDatos();
+  }, []);
 
   // 1 configuracion del rango de horas
   //empieza a las 6:00 AM
@@ -269,7 +302,7 @@ export const CalendarioView = () => {
   };
 
   // MAGIA DE FILTRADO: Solo le pasamos al calendario los eventos cuyo laboratorio esté en "labsActivos"
-  const eventosFiltrados = eventosPrueba.filter(evento => 
+  const eventosFiltrados = eventosDB.filter(evento => 
     labsActivos.includes(evento.laboratorio)
   );
 
@@ -294,8 +327,9 @@ export const CalendarioView = () => {
               //convertimos la respuesta del backend a json
               const resultado = await respuesta.json();
                if( respuesta.ok) {
-                console.log("Actividadcreada con exito:", resultado);
-                // Opcional: aqui podra disparar una recarga de eventos en el calendario
+                console.log("Actividad creada con exito:", resultado);
+                alert("Actividad creada con éxito");
+                cargarDatos(); // Recargar los eventos
                }else{
                 console.error("Error al crear actividad:", resultado);
                 alert("Error al crear actividad: " + resultado.message);
@@ -318,6 +352,7 @@ export const CalendarioView = () => {
           onNavigate={(nuevaFecha) => setFechaActual(nuevaFecha)}
           view={vistaActual}
           onView={(nuevaVista) => setVistaActual(nuevaVista)}
+          onSelectEvent={(evento) => setEventoSeleccionado(evento)}
 
         // aplicar cambios
         min={horasInicio}
@@ -337,6 +372,51 @@ export const CalendarioView = () => {
           style={{ height: '100%' }}
         />
       </div>
+
+      {/* Modal para ver detalles de la actividad seleccionada */}
+      {eventoSeleccionado && (
+        <div className="na-overlay" onClick={() => setEventoSeleccionado(null)} style={{ zIndex: 99999 }}>
+          <div className="na-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '400px' }}>
+            <div className="na-header">
+              <div>
+                <div className="na-header-title">Detalles de Actividad</div>
+                <div className="na-header-sub">{eventoSeleccionado.title}</div>
+              </div>
+              <button className="na-close" onClick={() => setEventoSeleccionado(null)}>×</button>
+            </div>
+            <div className="na-body" style={{ padding: '20px' }}>
+              <p style={{ marginBottom: '8px' }}><strong>Tipo:</strong> <span style={{ textTransform: 'capitalize' }}>{eventoSeleccionado.tipo}</span></p>
+              <p style={{ marginBottom: '8px' }}><strong>Laboratorio:</strong> {eventoSeleccionado.laboratorio}</p>
+              <p style={{ marginBottom: '8px' }}><strong>Desde:</strong> {format(eventoSeleccionado.start, 'dd/MM/yyyy h:mm a')}</p>
+              <p style={{ marginBottom: '8px' }}><strong>Hasta:</strong> {format(eventoSeleccionado.end, 'dd/MM/yyyy h:mm a')}</p>
+              <div style={{ margin: '15px 0', borderTop: '1px solid #eee' }}></div>
+              
+              {eventoSeleccionado.tipo === 'clase' && (
+                <>
+                  <p style={{ marginBottom: '8px' }}><strong>Materia:</strong> {eventoSeleccionado.detalles?.materia}</p>
+                  <p style={{ marginBottom: '8px' }}><strong>Docente:</strong> {eventoSeleccionado.detalles?.docente}</p>
+                  <p style={{ marginBottom: '8px' }}><strong>Estudiantes:</strong> {eventoSeleccionado.detalles?.clase_estudiantes}</p>
+                </>
+              )}
+              {eventoSeleccionado.tipo === 'mantenimiento' && (
+                <>
+                  <p style={{ marginBottom: '8px' }}><strong>Responsable:</strong> {eventoSeleccionado.detalles?.responsable}</p>
+                  <p style={{ marginBottom: '8px' }}><strong>Descripción:</strong> {eventoSeleccionado.detalles?.mant_descripcion}</p>
+                </>
+              )}
+              {eventoSeleccionado.tipo === 'reserva' && (
+                <>
+                  <p style={{ marginBottom: '8px' }}><strong>Motivo:</strong> {eventoSeleccionado.detalles?.reserva_titulo}</p>
+                  <p style={{ marginBottom: '8px' }}><strong>Personas:</strong> {eventoSeleccionado.detalles?.reserva_personas}</p>
+                </>
+              )}
+            </div>
+            <div className="na-footer" style={{ justifyContent: 'flex-end' }}>
+              <button className="na-btn-save" onClick={() => setEventoSeleccionado(null)}>Cerrar</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="calendar-sidebar-right">
         {/* Conecta el botón "Crear" para que cambie el estado a true */}
@@ -369,14 +449,14 @@ export const CalendarioView = () => {
           {/* Cuerpo (Solo se muestra si menuDesplegado es true) */}
           {menuDesplegado && (
             <div className="card-body">
-              {LABORATORIOS_DISPONIBLES.map((lab) => (
-                <label key={lab} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              {laboratoriosDB.map((lab) => (
+                <label key={lab.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                   <input 
                     type="checkbox" 
-                    checked={labsActivos.includes(lab)} // Se marca solo si está en nuestro estado
-                    onChange={() => toggleLaboratorio(lab)} // Llama a nuestra función al hacer clic
+                    checked={labsActivos.includes(lab.nombre)} // Se marca solo si está en nuestro estado
+                    onChange={() => toggleLaboratorio(lab.nombre)} // Llama a nuestra función al hacer clic
                   /> 
-                  {lab}
+                  {lab.nombre}
                 </label>
               ))}
             </div>

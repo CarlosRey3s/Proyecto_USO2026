@@ -1,0 +1,142 @@
+.nl-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.nl-modal {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nl-header {
+  padding: 20px;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.nl-header-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.nl-header-sub {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.nl-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+}
+
+.nl-close:hover {
+  color: #333;
+}
+
+.nl-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.nl-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nl-field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nl-input,
+.nl-select,
+.nl-textarea {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.nl-input:focus,
+.nl-select:focus,
+.nl-textarea:focus {
+  border-color: #0F6E56;
+}
+
+.nl-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.nl-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eaeaea;
+  background-color: #fafafa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.nl-btn-cancel {
+  padding: 8px 16px;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  color: #555;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.nl-btn-cancel:hover {
+  background: #f0f0f0;
+}
+
+.nl-btn-save {
+  padding: 8px 16px;
+  background-color: #0F6E56;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.nl-btn-save:hover {
+  background-color: #0b503e;
+}
+
+.nl-btn-save:disabled {
+  background-color: #a5cbbd;
+  cursor: not-allowed;
+}

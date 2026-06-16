@@ -8,6 +8,9 @@ import {
   ShieldCheck,
   LogOut,
   ChevronLeft,
+  RefreshCw,
+  Users,
+  FlaskConical,
 } from 'lucide-react';
 import '../../index.css';
 
@@ -16,16 +19,23 @@ interface SidebarProps {
   onToggle?: () => void;
   userName?: string;
   userRole?: string;
+  onToggleRole?: () => void;
 }
 
-const menuItems = [
-  { name: 'Dashboard',             path: '/dashboard',          icon: LayoutDashboard },
-  { name: 'Reservar',              path: '/reservas',           icon: BookOpen        },
-  { name: 'Mis Evaluaciones',      path: '/evaluaciones',       icon: ClipboardList   },
+const adminMenuItems = [
   { name: 'Gestión Evaluaciones',  path: '/admin-evaluaciones', icon: ClipboardList   },
   { name: 'Calendario',            path: '/calendario',         icon: Calendar        },
   { name: 'Inventario',            path: '/inventario',         icon: Package         },
+  { name: 'Laboratorios',          path: '/admin/laboratorios', icon: FlaskConical    },
+  { name: 'Usuarios',              path: '/admin/usuarios',     icon: Users           },
+  { name: 'Reportes',              path: '/admin/reportes',     icon: ClipboardList   },
   { name: 'Dashboard Admin',       path: '/admin/dashboard',    icon: ShieldCheck     },
+];
+
+const studentMenuItems = [
+  { name: 'Dashboard',             path: '/dashboard',          icon: LayoutDashboard },
+  { name: 'Reservar',              path: '/reservas',           icon: BookOpen        },
+  { name: 'Mis Evaluaciones',      path: '/evaluaciones',       icon: ClipboardList   },
 ];
 
 export const Sidebar = ({
@@ -33,6 +43,7 @@ export const Sidebar = ({
   onToggle,
   userName  = 'Astrid',
   userRole  = 'Administrador',
+  onToggleRole,
 }: SidebarProps) => {
   const location = useLocation();
 
@@ -80,7 +91,7 @@ export const Sidebar = ({
       {/* ── Navigation ── */}
       <nav className="sb__nav" aria-label="Menú principal">
         <ul className="sb__list">
-          {menuItems.map((item) => {
+          {(userRole === 'Administrador' ? adminMenuItems : studentMenuItems).map((item) => {
             const active = isActive(item.path);
             const Icon   = item.icon;
 
@@ -119,8 +130,13 @@ export const Sidebar = ({
             <span className="sb__user-name">Hola, {userName}</span>
             <span className="sb__user-role">{userRole}</span>
           </div>
-          <button className="sb__logout" aria-label="Cerrar sesión" title="Cerrar sesión">
-            <LogOut size={15} />
+          <button 
+            className="sb__logout" 
+            aria-label="Cambiar de rol" 
+            title="Cambiar de rol"
+            onClick={onToggleRole}
+          >
+            <RefreshCw size={15} />
           </button>
         </div>
       </div>

@@ -20,15 +20,20 @@ app.get('/api/ping', (req, res) => {
 const laboratorioRoutes = require('./routes/laboratorioRoutes');
 const authRoutes = require('./routes/authRoutes');
 const laboratoriosRoutes = require('./routes/laboratoriosRoutes');
+const usuariosRoutes = require('./routes/usuariosRoutes');
+const inventarioRoutes = require('./routes/inventarioRoutes');
+const notificacionesRoutes = require('./routes/notificacionesRoutes');
+const encuestasRoutes = require('./routes/encuestasRoutes');
 
 // Uso de Rutas
 app.use('/api/laboratorios', laboratoriosRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/inventario', inventarioRoutes);
+app.use('/api/notificaciones', notificacionesRoutes);
+app.use('/api/encuestas', encuestasRoutes);
 
 
 app.use('/api/actividades', actividadesRoutes);
 
-app.listen (30000, () => {
-    console.log('Servidor corriendo en el puerto 30000');
-});
 module.exports = app; // <--- ¡Esto es vital!

@@ -36,22 +36,13 @@ interface FormData {
   recurrencia?: string;
 }
 
-// ── Inventario ──────────────────────────────────────────
 interface EquipoSeleccionado {
   id: string;
   nombre: string;
   disponibles: number;
+  laboratorio_id?: string;
+  cantidadRequerida: number;
 }
-
-// Datos de ejemplo — reemplazar con llamada a API filtrada por lab + horario
-const EQUIPO_DISPONIBLE: EquipoSeleccionado[] = [
-  { id: "e1", nombre: "Osciloscopio digital",  disponibles: 4 },
-  { id: "e2", nombre: "Multímetro digital",     disponibles: 8 },
-  { id: "e3", nombre: "Fuente de poder",        disponibles: 1 },
-  { id: "e4", nombre: "Generador de señales",   disponibles: 3 },
-  { id: "e5", nombre: "Kit Arduino Uno",        disponibles: 12 },
-  { id: "e6", nombre: "Raspberry Pi 4",         disponibles: 5 },
-];
 
 function badgeClass(disponibles: number) {
   if (disponibles === 0) return "inv-badge-no";
@@ -111,24 +102,40 @@ export function ModalNuevaActividad({ onClose, onGuardar }: NuevaActividadProps)
 
   const [labsDesdeBD,setLabsDesdeBD] = useState<LaboratorioDB[]>([]);
   const [cargandoLabs, setCarganndoLabs] = useState(true);
+  const [itemsBD, setItemsBD] = useState<EquipoSeleccionado[]>([]);
 
   // 2 useeffect para traer los datos al abrir el modal
   useEffect(() => {
-    const fetchlaboratorios = async () => {
-      try{
-        const response = await fetch('http://localhost:4000/api/laboratorios');
-        const result = await response.json();
+    const fetchData = async () => {
+      try {
+        const [resLabs, resInv] = await Promise.all([
+          fetch('http://localhost:4000/api/laboratorios'),
+          fetch('http://localhost:4000/api/inventario')
+        ]);
+        
+        const dataLabs = await resLabs.json();
+        const dataInv = await resInv.json();
 
-        if(result.success){
-          setLabsDesdeBD(result.data);
+        if (dataLabs.success) {
+          setLabsDesdeBD(dataLabs.data);
         }
-      }catch(error){
-        console.error('Error al cargar laboratorios:', error);
-      }finally{
+        
+        if (dataInv.success) {
+          const equipos = dataInv.data.map((item: any) => ({
+            id: String(item.id),
+            nombre: item.name,
+            disponibles: Number(item.stock),
+            laboratorio_id: String(item.laboratorio_id)
+          }));
+          setItemsBD(equipos);
+        }
+      } catch (error) {
+        console.error('Error al cargar datos iniciales:', error);
+      } finally {
         setCarganndoLabs(false);
       }
-    }
-    fetchlaboratorios();
+    };
+    fetchData();
   }, []); // el array vacio siginifica que se ejecuta solo una vez al montar el componente
 
   const [tipo, setTipo]   = useState<TipoActividad>(null);
@@ -140,20 +147,34 @@ export function ModalNuevaActividad({ onClose, onGuardar }: NuevaActividadProps)
 
   const equiposSeleccionados: EquipoSeleccionado[] = form.equipos || [];
 
-  const resultados = EQUIPO_DISPONIBLE.filter(
+  const resultados = itemsBD.filter(
     (e) =>
+      e.laboratorio_id === form.laboratorio &&
       e.nombre.toLowerCase().includes(query.toLowerCase()) &&
       !equiposSeleccionados.find((s) => s.id === e.id)
   );
 
-  const agregarEquipo = (equipo: EquipoSeleccionado) => {
-    setForm((prev) => ({ ...prev, equipos: [...(prev.equipos || []), equipo] }));
+  const agregarEquipo = (equipo: Omit<EquipoSeleccionado, 'cantidadRequerida'>) => {
+    setForm((prev) => ({ 
+      ...prev, 
+      equipos: [...(prev.equipos || []), { ...equipo, cantidadRequerida: 1 }] 
+    }));
     setQuery("");
     setShowResults(false);
   };
 
   const quitarEquipo = (id: string) => {
     setForm((prev) => ({ ...prev, equipos: (prev.equipos || []).filter((e) => e.id !== id) }));
+  };
+
+  const actualizarCantidadEquipo = (id: string, nuevaCantidad: number, maximo: number) => {
+    const cantidadFinal = Math.min(Math.max(1, nuevaCantidad), maximo);
+    setForm((prev) => ({
+      ...prev,
+      equipos: (prev.equipos || []).map(e => 
+        e.id === id ? { ...e, cantidadRequerida: cantidadFinal } : e
+      )
+    }));
   };
   // ─────────────────────
 
@@ -398,11 +419,13 @@ export function ModalNuevaActividad({ onClose, onGuardar }: NuevaActividadProps)
                   <input
                     className="na-input inv-search-input"
                     type="text"
-                    placeholder="Buscar equipo o activo..."
+                    placeholder={form.laboratorio ? "Buscar equipo o activo..." : "Selecciona un lab primero..."}
                     value={query}
                     onChange={(e) => { setQuery(e.target.value); setShowResults(true); }}
                     onFocus={() => setShowResults(true)}
                     onBlur={() => setTimeout(() => setShowResults(false), 150)}
+                    disabled={!form.laboratorio}
+                    style={{ backgroundColor: !form.laboratorio ? '#f3f4f6' : 'white', cursor: !form.laboratorio ? 'not-allowed' : 'text' }}
                   />
                   {showResults && resultados.length > 0 && (
                     <ul className="inv-results">
@@ -426,8 +449,28 @@ export function ModalNuevaActividad({ onClose, onGuardar }: NuevaActividadProps)
                 {equiposSeleccionados.length > 0 && (
                   <ul className="inv-selected-list">
                     {equiposSeleccionados.map((equipo) => (
-                      <li key={equipo.id} className="inv-selected-item">
-                        <span className="inv-selected-nombre">{equipo.nombre}</span>
+                      <li key={equipo.id} className="inv-selected-item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span className="inv-selected-nombre" style={{ flex: 1 }}>{equipo.nombre}</span>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <span style={{ fontSize: '11px', color: '#64748b' }}>Cant:</span>
+                          <input 
+                            type="number" 
+                            min="1" 
+                            max={equipo.disponibles}
+                            value={equipo.cantidadRequerida}
+                            onChange={(e) => actualizarCantidadEquipo(equipo.id, parseInt(e.target.value) || 1, equipo.disponibles)}
+                            style={{ 
+                              width: '45px', 
+                              padding: '2px 4px', 
+                              fontSize: '12px', 
+                              border: '1px solid #cbd5e1', 
+                              borderRadius: '4px',
+                              textAlign: 'center'
+                            }}
+                          />
+                        </div>
+
                         <span className={`inv-result-badge ${badgeClass(equipo.disponibles)}`}>
                           {badgeLabel(equipo.disponibles)}
                         </span>

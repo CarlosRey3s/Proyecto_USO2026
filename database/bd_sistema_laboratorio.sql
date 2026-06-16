@@ -49,7 +49,7 @@ CREATE TABLE ITEMS_INVENTARIO (
     FK_laboratorio_id INT,
     nombre VARCHAR(100) NOT NULL,
     codigo_interno VARCHAR(50) UNIQUE,
-    numero_cas VARCHAR(50), 
+    numero_cas VARCHAR(50),
     categoria VARCHAR(50),
     ubicacion_fisica VARCHAR(100),
     unidad_medida VARCHAR(20),
@@ -71,6 +71,20 @@ CREATE TABLE MOVIMIENTOS_INVENTARIO (
     observaciones TEXT,
     FOREIGN KEY (FK_item_id) REFERENCES ITEMS_INVENTARIO(id) ON DELETE CASCADE,
     FOREIGN KEY (FK_usuario_id) REFERENCES USUARIOS(id)
+);
+
+-- nueva tabla que agregue - salvador para reportes
+CREATE TABLE REPORTES_INVENTARIO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    FK_item_id INT NOT NULL,
+    FK_usuario_id INT,
+    tipo_problema VARCHAR(50) NOT NULL,
+    descripcion TEXT NOT NULL,
+    cantidad DECIMAL(10,2) DEFAULT 1,
+    estado VARCHAR(20) DEFAULT 'Pendiente',
+    fecha_reporte TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (FK_item_id) REFERENCES ITEMS_INVENTARIO(id) ON DELETE CASCADE,
+    FOREIGN KEY (FK_usuario_id) REFERENCES USUARIOS(id) ON DELETE SET NULL
 );
 
 -- 4. RESERVAS
@@ -104,25 +118,49 @@ CREATE TABLE RESERVA_ITEMS (
 -- 5. ACTIVIDADES
 -- ----------------------------------------------------------
 
+-- BASE: solo campos comunes a los 3 tipos
 CREATE TABLE ACTIVIDADES (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    FK_docente_id INT,
     FK_laboratorio_id INT NOT NULL,
     FK_creado_por INT NOT NULL,
-    titulo VARCHAR(150) NOT NULL,
-    tipo ENUM('clase', 'reserva', 'mant'),
+    tipo ENUM('clase', 'reserva', 'mantenimiento') NOT NULL,
     fecha_hora_inicio DATETIME NOT NULL,
     fecha_hora_fin DATETIME NOT NULL,
-    repetir_semanalmente TINYINT(1) DEFAULT 0,
-    num_estudiantes INT,
-    nota_adicional TEXT,
+    recurrencia ENUM('no_repite','diario','semanal','dias_habiles','mensual','personalizado') NOT NULL DEFAULT 'no_repite',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CHECK (fecha_hora_fin > fecha_hora_inicio),
-    FOREIGN KEY (FK_docente_id) REFERENCES USUARIOS(id),
     FOREIGN KEY (FK_laboratorio_id) REFERENCES LABORATORIOS(id),
     FOREIGN KEY (FK_creado_por) REFERENCES USUARIOS(id)
 );
 
+-- HIJA CLASE
+CREATE TABLE ACTIVIDADES_CLASE (
+    FK_actividad_id INT PRIMARY KEY,
+    materia VARCHAR(150) NOT NULL,
+    docente VARCHAR(100) NOT NULL,
+    num_estudiantes INT NOT NULL,
+    FOREIGN KEY (FK_actividad_id) REFERENCES ACTIVIDADES(id) ON DELETE CASCADE
+);
+
+-- HIJA MANTENIMIENTO
+CREATE TABLE ACTIVIDADES_MANTENIMIENTO (
+    FK_actividad_id INT PRIMARY KEY,
+    responsable VARCHAR(100) NOT NULL,
+    nota_adicional TEXT,
+    FOREIGN KEY (FK_actividad_id) REFERENCES ACTIVIDADES(id) ON DELETE CASCADE
+);
+
+-- HIJA RESERVA DIRECTA
+CREATE TABLE ACTIVIDADES_RESERVA (
+    FK_actividad_id INT PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    FK_mesa_id INT,
+    num_personas INT NOT NULL,
+    FOREIGN KEY (FK_actividad_id) REFERENCES ACTIVIDADES(id) ON DELETE CASCADE,
+    FOREIGN KEY (FK_mesa_id) REFERENCES MESAS(id) ON DELETE SET NULL
+);
+
+-- ITEMS USADOS EN RESERVA DIRECTA
 CREATE TABLE ACTIVIDAD_ITEMS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     FK_actividad_id INT NOT NULL,
@@ -203,4 +241,56 @@ CREATE TABLE RESPUESTAS_ESTUDIANTE (
     FOREIGN KEY (FK_evaluacion_asignada_id) REFERENCES EVALUACIONES_ASIGNADAS(id) ON DELETE CASCADE,
     FOREIGN KEY (FK_pregunta_id) REFERENCES BANCO_PREGUNTAS(id),
     FOREIGN KEY (FK_opcion_seleccionada_id) REFERENCES PREGUNTA_OPCIONES(id)
+);
+
+CREATE TABLE NOTIFICACIONES (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    FK_usuario_id INT NOT NULL,
+    titulo VARCHAR(100) NOT NULL,
+    mensaje TEXT NOT NULL,
+    leida BOOLEAN DEFAULT FALSE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (FK_usuario_id) REFERENCES USUARIOS(id) ON DELETE CASCADE
+);
+
+-- =======================================================
+-- NUEVAS TABLAS PARA EL SISTEMA DE CUESTIONARIOS (ENCUESTAS)
+-- =======================================================
+
+CREATE TABLE ENCUESTAS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(200) NOT NULL,
+    laboratorio_id INT,
+    fecha_inicio DATETIME NOT NULL,
+    fecha_fin DATETIME NOT NULL,
+    estado ENUM('Borrador', 'Publicada') DEFAULT 'Borrador',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (laboratorio_id) REFERENCES LABORATORIOS(id) ON DELETE SET NULL
+);
+
+CREATE TABLE PREGUNTAS_ENCUESTA (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    FK_encuesta_id INT NOT NULL,
+    texto_pregunta TEXT NOT NULL,
+    tipo ENUM('escala_1_5', 'texto_abierto') NOT NULL,
+    orden INT DEFAULT 0,
+    FOREIGN KEY (FK_encuesta_id) REFERENCES ENCUESTAS(id) ON DELETE CASCADE
+);
+
+CREATE TABLE RESPUESTAS_ENCUESTA (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    FK_encuesta_id INT NOT NULL,
+    fecha_respuesta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (FK_encuesta_id) REFERENCES ENCUESTAS(id) ON DELETE CASCADE
+    -- No vinculamos al usuario para mantener el anonimato total
+);
+
+CREATE TABLE DETALLE_RESPUESTAS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    FK_respuesta_encuesta_id INT NOT NULL,
+    FK_pregunta_id INT NOT NULL,
+    valor_escala INT NULL, -- De 1 a 5, nulo si es de texto
+    comentario_texto TEXT NULL, -- Texto, nulo si es de escala
+    FOREIGN KEY (FK_respuesta_encuesta_id) REFERENCES RESPUESTAS_ENCUESTA(id) ON DELETE CASCADE,
+    FOREIGN KEY (FK_pregunta_id) REFERENCES PREGUNTAS_ENCUESTA(id) ON DELETE CASCADE
 );

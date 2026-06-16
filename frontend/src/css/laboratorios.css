@@ -1,0 +1,221 @@
+.labs-container {
+  padding: 24px;
+  background-color: var(--gris);
+  min-height: calc(100vh - 70px);
+}
+
+.labs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.labs-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--texto);
+  margin: 0 0 4px 0;
+}
+
+.labs-subtitle {
+  font-size: 14px;
+  color: #64748B;
+  margin: 0;
+}
+
+.btn-add-lab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--verde);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-lab:hover {
+  background-color: var(--verde-oscuro);
+  transform: translateY(-1px);
+}
+
+.labs-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  background-color: var(--blanco);
+  color: var(--texto);
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  min-width: 140px;
+}
+
+.filter-select:focus {
+  border-color: var(--verde);
+}
+
+.search-labs {
+  position: relative;
+  min-width: 250px;
+}
+
+.search-labs input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  background-color: var(--blanco);
+  outline: none;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: var(--texto);
+}
+
+.search-labs input:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(34, 128, 107, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94A3B8;
+}
+
+.labs-table-container {
+  background-color: var(--blanco);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: visible;
+  border: 1px solid #F1F5F9;
+  min-height: 350px;
+}
+
+.labs-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.labs-table th {
+  padding: 16px 24px;
+  background-color: #F8FAFC;
+  color: #64748B;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.labs-table td {
+  padding: 16px 24px;
+  border-bottom: 1px solid #F1F5F9;
+  vertical-align: middle;
+  color: var(--texto);
+  font-size: 14px;
+}
+
+.labs-table tr:last-child td {
+  border-bottom: none;
+}
+
+.labs-table tr:hover {
+  background-color: #FBFDFD;
+}
+
+/* MENÚ DE ACCIONES */
+.action-menu-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-button {
+  background: transparent;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background: #F1F5F9;
+  color: var(--texto);
+}
+
+.actions-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background: var(--blanco);
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  width: 160px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: none !important;
+  background: transparent !important;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--texto);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  box-shadow: none !important;
+}
+
+.dropdown-item:hover {
+  background-color: #F8FAFC !important;
+  color: var(--verde) !important;
+}
+
+.dropdown-item.delete {
+  color: #EF4444; /* Rojo/Rosado */
+}
+
+.dropdown-item.delete:hover {
+  background-color: #FEE2E2 !important;
+  color: #DC2626 !important;
+}
