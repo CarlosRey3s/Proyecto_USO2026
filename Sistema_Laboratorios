@@ -1,7 +1,7 @@
 -- ===========================================================================
 -- SCRIPT DE BASE DE DATOS: PLATAFORMA SMARTLABS (USO)
 -- MOTOR: PostgreSQL (v13 o superior)
--- DISEÑO: Normalizado en 3NF con Class Table Inheritance y Configuración Dinámica
+-- DISEÑO: Normalizado en 3NF con Class Table Inheritance y Asignación de Roles
 -- ===========================================================================
 
 -- Habilitar extensión para generación automática de UUIDs
@@ -13,8 +13,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TYPE rol_usuario_enum AS ENUM ('estudiante', 'docente', 'coordinador', 'administrador');
 CREATE TYPE estado_usuario_enum AS ENUM ('activo', 'inactivo');
 CREATE TYPE estado_lab_enum AS ENUM ('disponible', 'en_mantenimiento', 'clausurado');
-CREATE TYPE modo_reserva_enum AS ENUM ('por_estacion', 'espacio_completo'); -- NUEVO: Control de tipo de espacio
-CREATE TYPE estado_estacion_enum AS ENUM ('disponible', 'no_disponible'); -- Evolución de 'mesas'
+CREATE TYPE modo_reserva_enum AS ENUM ('por_estacion', 'espacio_completo');
+CREATE TYPE estado_estacion_enum AS ENUM ('disponible', 'no_disponible'); 
 CREATE TYPE tipo_actividad_enum AS ENUM ('clase', 'reserva', 'mantenimiento');
 CREATE TYPE estado_reserva_enum AS ENUM ('pendiente', 'aprobada', 'cancelada', 'completada');
 CREATE TYPE tipo_movimiento_enum AS ENUM ('ingreso', 'egreso', 'ajuste');
@@ -37,21 +37,22 @@ CREATE TABLE usuarios (
     fecha_creacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla: laboratorios (Ahora con configuración de modo_reserva)
+-- Tabla: laboratorios (Ahora con asignación de coordinador)
 CREATE TABLE laboratorios (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     nombre VARCHAR(100) NOT NULL UNIQUE,
     descripcion TEXT,
     estado estado_lab_enum NOT NULL DEFAULT 'disponible',
-    modo_reserva modo_reserva_enum NOT NULL DEFAULT 'por_estacion', -- Define cómo se comporta en el Frontend
+    modo_reserva modo_reserva_enum NOT NULL DEFAULT 'por_estacion', 
+    coordinador_id UUID REFERENCES usuarios(id) ON DELETE SET NULL, -- NUEVO: Asignación directa del responsable
     fecha_creacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla: estaciones_trabajo (Antes "mesas" - PCs, Mesones, etc.)
+-- Tabla: estaciones_trabajo
 CREATE TABLE estaciones_trabajo (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     laboratorio_id UUID NOT NULL REFERENCES laboratorios(id) ON DELETE CASCADE,
-    nombre VARCHAR(50) NOT NULL, -- Ej: 'PC-15', 'Mesón 2', 'Estación B'
+    nombre VARCHAR(50) NOT NULL,
     capacidad INT NOT NULL CHECK (capacidad > 0),
     estado estado_estacion_enum NOT NULL DEFAULT 'disponible',
     CONSTRAINT unique_estacion_por_laboratorio UNIQUE (laboratorio_id, nombre)
@@ -87,7 +88,7 @@ CREATE TABLE clases_academicas (
 CREATE TABLE reservas_estudiantes (
     actividad_id UUID PRIMARY KEY REFERENCES actividades(id) ON DELETE CASCADE,
     usuario_id UUID NOT NULL REFERENCES usuarios(id) ON DELETE RESTRICT,
-    estacion_id UUID REFERENCES estaciones_trabajo(id) ON DELETE SET NULL, -- Se deja en NULL si el lab es 'espacio_completo'
+    estacion_id UUID REFERENCES estaciones_trabajo(id) ON DELETE SET NULL, 
     titulo VARCHAR(150) NOT NULL,
     nota_adicional TEXT,
     estado_reserva estado_reserva_enum NOT NULL DEFAULT 'pendiente'
