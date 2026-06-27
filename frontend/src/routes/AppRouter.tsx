@@ -4,45 +4,64 @@ import { MainLayout } from '../components/layout/MainLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import Login from '../pages/auth/Login';
 
-// Pages
+// ESTUDIANTE
 import Dashboard from "../pages/estudiante/Dashboard";
 import Reservar from "../pages/estudiante/Reservar";
-import { Evaluaciones } from '../pages/estudiante/Evaluaciones';
+import { BuzonSugerencias } from "../pages/estudiante/BuzonSugerencias";
+import { Evaluaciones } from "../pages/estudiante/Evaluaciones";
 import RealizarEvaluacion from "../pages/estudiante/RealizarEvaluacion";
-import { CalendarioView, InventarioView, EvaluacionesAdminView, DashboardAdmin } from '../pages/admin';
+
+// DOCENTE
+import DocenteDashboard from "../pages/docente/DocenteDashboard";
+
+// ADMIN
+import {
+  CalendarioView,
+  InventarioView,
+  EvaluacionesAdminView,
+  DashboardAdmin
+} from '../pages/admin';
 
 export const AppRouter = () => {
   return (
     <Router>
       <Routes>
-        {/* Ruta pública */}
+
         <Route path="/login" element={<Login />} />
 
-        {/* Rutas protegidas */}
+        {/* PROTEGIDAS */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<MainLayout />}>
-            
-            {/* Rutas comunes o de estudiante */}
+
+            {/* ================= ESTUDIANTE ================= */}
+            <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="reservas" element={<Reservar />} />
             <Route path="evaluaciones" element={<Evaluaciones />} />
             <Route path="realizar-evaluacion" element={<RealizarEvaluacion />} />
-            
-            {/* Rutas de admin (podemos protegerlas más específicamente si queremos) */}
-            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                <Route path="admin/dashboard" element={<DashboardAdmin />} />
-                <Route path="calendario" element={<CalendarioView />} />
-                <Route path="inventario" element={<InventarioView />} />
-                <Route path="admin-evaluaciones" element={<EvaluacionesAdminView />} />
+            <Route path="buzon-sugerencias" element={<BuzonSugerencias />} />
+
+            {/* ================= DOCENTE ================= */}
+            <Route element={<ProtectedRoute allowedRoles={['docente', 'admin']} />}>
+              <Route path="docente/dashboard" element={<DocenteDashboard />} />
+              <Route path="docente/reservas" element={<Reservar />} />
+              <Route path="docente/evaluaciones" element={<Evaluaciones />} />
             </Route>
 
-            {/* Redirección por defecto al dashboard */}
-            <Route index element={<Navigate to="/dashboard" replace />} />
+            {/* ================= ADMIN ================= */}
+            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+              <Route path="admin/dashboard" element={<DashboardAdmin />} />
+              <Route path="calendario" element={<CalendarioView />} />
+              <Route path="inventario" element={<InventarioView />} />
+              <Route path="admin-evaluaciones" element={<EvaluacionesAdminView />} />
+              <Route path="admin/buzon-sugerencias" element={<BuzonSugerencias />} />
+            </Route>
+
           </Route>
         </Route>
 
-        {/* Fallback para rutas no encontradas */}
         <Route path="*" element={<Navigate to="/login" replace />} />
+
       </Routes>
     </Router>
   );

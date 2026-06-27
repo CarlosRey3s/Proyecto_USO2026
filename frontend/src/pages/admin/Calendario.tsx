@@ -9,6 +9,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 // Importa tu nuevo modal (ajusta la ruta según donde tengas CalendarioView)
 import { ModalNuevaActividad } from '../../components/shared/ModalNuevaActividad';
 import '../../css/calendario.css';
+
 import { formatDistanceStrictWithOptions } from 'date-fns/fp';
 
 const locales = { 'es': es };

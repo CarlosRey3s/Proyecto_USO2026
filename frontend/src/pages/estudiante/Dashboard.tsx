@@ -1,61 +1,133 @@
+import { useState } from "react";
 import "../../css/evaluaciones.css";
 
 export default function Dashboard() {
+  // Definimos que el estado acepta tipos 'string' o 'null'
+  const [openAccordion, setOpenAccordion] = useState<string | null>("sistemas_l1");
+
+  // Tipamos el parámetro 'id' explícitamente como 'string'
+  const toggleAccordion = (id: string): void => {
+    if (openAccordion === id) {
+      setOpenAccordion(null); // Lo cierra si ya estaba abierto
+    } else {
+      setOpenAccordion(id); // Lo abre si estaba cerrado
+    }
+  };
+
   return (
-    <div className="main">
-      {/* IZQUIERDA */}
-      <div className="schedule">
-        <h3>Horarios de Laboratorios</h3>
+    <div className="student-dashboard">
+      <h2 className="section-main-title">Mis Laboratorios</h2>
 
-        <div className="tabs">
-          <div className="tab">Horas</div>
-          <div className="tab active">Lunes</div>
-          <div className="tab">Martes</div>
-          <div className="tab">Miércoles</div>
-          <div className="tab">Jueves</div>
-          <div className="tab">Viernes</div>
-          <div className="tab">Sábado</div>
+      {/* ================= SECCIÓN: HORARIO ACADÉMICO ================= */}
+      <div className="category-block">
+        <div className="category-header">
+          <span className="checkbox-icon"></span>
+          <h3>HORARIO ACADÉMICO</h3>
         </div>
 
-        <div className="schedule-card">
-          <div className="time">08:00 - 10:00</div>
-          <div>
-            <strong>Física</strong>
-            <p>Lab 101</p>
+        <div className="accordion-list">
+          
+          {/* Item 1: LABORATORIO FÍSICA Lab L2 */}
+          <div className={`accordion-item ${openAccordion === "fisica_l2" ? "open" : "closed"}`}>
+            <div 
+              className="accordion-summary" 
+              onClick={() => toggleAccordion("fisica_l2")} 
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="summary-left">
+                <span className="icon-lab microscope">🔬</span>
+                <span className="label-type">Clases</span>
+                <span className="label-name">LABORATORIO FÍSICA Lab L2</span>
+              </div>
+              <span className="arrow-icon">{openAccordion === "fisica_l2" ? "▲" : "▼"}</span>
+            </div>
+            
+            {/* Contenido condicional para Física L2 */}
+            {openAccordion === "fisica_l2" && (
+              <div className="accordion-content">
+                <div className="info-group">
+                  <h4>Horarios asignado</h4>
+                  <p>Martes: 08:00 am - 10:00 am</p>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
 
-        <div className="schedule-card">
-          <div className="time">10:00 - 12:00</div>
-          <div>
-            <strong>Sistemas Digitales</strong>
-            <p>Lab 203</p>
+          {/* Item 2: SISTEMAS DIGITALES Lab L1 */}
+          <div className={`accordion-item ${openAccordion === "sistemas_l1" ? "open" : "closed"}`}>
+            <div 
+              className="accordion-summary" 
+              onClick={() => toggleAccordion("sistemas_l1")} 
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="summary-left">
+                <span className="icon-lab microscope">🔬</span>
+                <span className="label-type">Clases</span>
+                <span className="label-name">SISTEMAS DIGITALES Lab L1</span>
+              </div>
+              <span className="arrow-icon">{openAccordion === "sistemas_l1" ? "▲" : "▼"}</span>
+            </div>
+            
+            {/* Contenido condicional para Sistemas Digitales */}
+            {openAccordion === "sistemas_l1" && (
+              <div className="accordion-content">
+                <div className="info-group">
+                  <h4>Horarios asignado</h4>
+                  <p>Lunes: 10:00 am - 12:00 pm</p>
+                  <p>Viernes: 10:00 am - 12:00 pm</p>
+                </div>
+
+                <div className="info-group details-section">
+                  <h4>Detalles del Laboratorio 001:</h4>
+                  <p><strong>Edificio:</strong> L1</p>
+                  <p><strong>Descripcion:</strong> Especialidad en electronica digital</p>
+                  <p><strong>Estado:</strong> <span className="status-active">Activo</span></p>
+                </div>
+              </div>
+            )}
           </div>
+
         </div>
       </div>
 
-      {/* DERECHA - EVALUACIONES */}
-      <div className="reservas-panel">
-        <h3>Evaluaciones pendientes</h3>
-
-        <div className="evaluacion-card">
-          <h4>Sistemas Digitales</h4>
-          <p>- Examen Parcial</p>
-          <p className="fecha">Vence: 20 Oct (3 días)</p>
+      {/* ================= SECCIÓN: RESERVAS DE LABORATORIO ================= */}
+      <div className="category-block">
+        <div className="category-header">
+          <span className="checkbox-icon"></span>
+          <h3>RESERVAS DE LABORATORIO</h3>
         </div>
 
-        <div className="evaluacion-card">
-          <h4>Lab Estática</h4>
-          <p>- Informe de Lab 3</p>
-          <p className="fecha">Vence: 22 Oct (5 días)</p>
-        </div>
+        <div className="accordion-list">
+          
+          {/* Item 3: LABORATORIO FÍSICA Lab 01 */}
+          <div className={`accordion-item ${openAccordion === "fisica_01" ? "open" : "closed"}`}>
+            <div 
+              className="accordion-summary" 
+              onClick={() => toggleAccordion("fisica_01")} 
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="summary-left">
+                <span className="icon-lab folder">📁</span>
+                <span className="label-type">Clases</span>
+                <span className="label-name">LABORATORIO FÍSICA Lab 01</span>
+              </div>
+              <span className="arrow-icon">{openAccordion === "fisica_01" ? "▲" : "▼"}</span>
+            </div>
 
-        <div className="evaluacion-card">
-          <h4>Física</h4>
-          <p>- Quiz Capítulo 4</p>
-          <p className="fecha">Vence: 25 Oct (8 días)</p>
+            {/* Contenido condicional para Física 01 */}
+            {openAccordion === "fisica_01" && (
+              <div className="accordion-content">
+                <div className="info-group">
+                  <h4>Horarios asignado</h4>
+                  <p>Miércoles: 02:00 pm - 04:00 pm</p>
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
+
     </div>
   );
 }

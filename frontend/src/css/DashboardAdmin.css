@@ -1,4 +1,7 @@
 :root {
+  /* ============================
+     PALETA DE COLORES
+  ============================ */
   --verde: #22806B;
   --verde-oscuro: #1B5E52;
   --verde-hover: #29967E;
@@ -7,129 +10,381 @@
   --blanco: #FFFFFF;
   --gris: #F4F6F8;
   --texto: #333;
+  --rojo-alerta: #EB3C3C;
 }
 
-/* RESET */
-* {
-  box-sizing: border-box;
+/* ============================
+   RESET GENERAL
+============================ */
+
+*{
+  box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--gris);
-  color: var(--texto);
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--gris);
+  color:var(--texto);
 }
 
-/* ===== CONTENT ===== */
-.content {
-  flex: 1;
-  padding: 20px;
+/* ============================
+   CONTENEDOR PRINCIPAL
+============================ */
+
+.content{
+  flex:1;
+  padding:16px;
 }
 
-/* ===== TOP CARDS ===== */
-.main {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+/* =====================================================
+   TARJETAS KPI (PARTE SUPERIOR DEL DASHBOARD)
+
+   Se redujo la altura para que ocupen menos espacio
+   y den prioridad a los gráficos inferiores.
+===================================================== */
+
+.main{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:16px;
+  margin-bottom:20px;
 }
 
-/* PANEL BASE */
-.panel {
-  flex: 1;
-  min-width: 200px;
-  border-radius: 12px;
-  padding: 18px;
-  color: white;
+/* Tarjeta base */
+
+.panel{
+  border-radius:12px;
+  padding:14px 18px;
+  min-height:100px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+
+  text-align:left;
+
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  transition:.2s ease;
 }
 
-/* VARIANTES */
-.solicitudes {
-  background: var(--verde);
+/* Animación ligera */
+
+.panel:hover{
+  transform:translateY(-2px);
 }
 
-.alertas {
-  background: var(--dorado);
-  color: #000;
+/* Colores de cada KPI */
+
+.panel.solicitudes{
+  background:var(--verde);
+  color:white;
 }
 
-.actividades {
-  background: var(--blanco);
-  color: #000;
-  border: 1px solid #eee;
+.panel.alertas{
+  background:var(--dorado);
+  color:#2c2c2c;
 }
 
-.laboratorios {
-  background: var(--verde);
+.panel.actividades{
+  background:var(--blanco);
+  color:#2c2c2c;
+  border:1px solid #e5e5e5;
 }
 
-/* TEXTOS */
-.panel-header {
-  font-size: 14px;
-  margin-bottom: 8px;
+.panel.laboratorios{
+  background:var(--verde);
+  color:white;
 }
 
-.counter {
-  font-size: 26px;
-  font-weight: bold;
+/* Título */
+
+.panel-header{
+  font-size:13px;
+  font-weight:600;
+  margin-bottom:8px;
+  opacity:.9;
 }
 
-.panel-sub {
-  font-size: 13px;
-  opacity: 0.8;
+/* Número principal */
+
+.counter{
+  font-size:30px;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:6px;
 }
 
-/* ===== BOTTOM LAYOUT ===== */
-.dashboard-bottom {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
+/* Texto secundario */
+
+.panel-sub{
+  display:block;
+  font-size:12px;
+  opacity:.85;
 }
 
-/* CARD GENERAL */
-.card {
-  flex: 1;
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+/* =====================================================
+   LAYOUT INFERIOR
+===================================================== */
+
+.dashboard-bottom{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
 }
 
-/* ===== GRAFICO ===== */
-.bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  height: 150px;
-  margin-top: 20px;
+/* Responsive */
+
+@media (max-width:900px){
+
+  .dashboard-bottom{
+    grid-template-columns:1fr;
+  }
+
 }
 
-.bar {
-  width: 30px;
-  height: 80px;
-  background: #ddd;
-  border-radius: 6px;
+/* =====================================================
+   TARJETAS BLANCAS
+===================================================== */
+
+.card{
+  background:white;
+  border-radius:12px;
+  padding:22px;
+  box-shadow:0 4px 12px rgba(0,0,0,.03);
 }
 
-.bar.tall {
-  height: 130px;
+.card h3{
+  margin-top:0;
+  margin-bottom:15px;
+  font-size:16px;
+  color:#444;
 }
 
-.bar.medium {
-  height: 100px;
+/* =====================================================
+   GRÁFICO DE BARRAS
+===================================================== */
+
+.chart-container{
+  margin-bottom:25px;
 }
 
-/* ===== AGENDA ===== */
-.agenda ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 15px;
+.chart-legend{
+  display:flex;
+  gap:15px;
+  font-size:13px;
+  margin-bottom:15px;
 }
 
-.agenda li {
-  background: #f3f3f3;
-  padding: 10px 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  font-size: 14px;
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.bullet{
+  width:12px;
+  height:12px;
+  border-radius:3px;
+}
+
+.bullet.reservas{
+  background:var(--verde);
+}
+
+.bullet.completadas{
+  background:var(--dorado);
+}
+
+.bars-wrapper{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  height:160px;
+  padding-bottom:5px;
+  border-bottom:1px solid #eee;
+}
+
+.day-column{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  flex:1;
+}
+
+.bar-pair{
+  display:flex;
+  align-items:flex-end;
+  gap:4px;
+  height:130px;
+}
+
+.v-bar{
+  width:14px;
+  border-radius:4px 4px 0 0;
+}
+
+.v-bar.res{
+  background:var(--verde);
+}
+
+.v-bar.comp{
+  background:var(--dorado);
+}
+
+.day-label{
+  margin-top:8px;
+  font-size:12px;
+  color:#777;
+}
+
+/* =====================================================
+   ALERTAS
+===================================================== */
+
+.alerts-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.alert-item{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.status-dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  margin-top:4px;
+  flex-shrink:0;
+}
+
+.status-dot.red{
+  background:var(--rojo-alerta);
+}
+
+.status-dot.yellow{
+  background:var(--dorado);
+}
+
+.status-dot.pink{
+  background:var(--rosado);
+}
+
+.status-dot.green{
+  background:var(--verde);
+}
+
+.alert-text h4{
+  margin:0;
+  font-size:14px;
+  font-weight:500;
+}
+
+.alert-text span{
+  font-size:12px;
+  color:#999;
+}
+
+/* =====================================================
+   SATURACIÓN DE CLASES
+===================================================== */
+
+.saturation-container{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:25px;
+}
+
+.h-bar-row{
+  display:flex;
+  align-items:center;
+  font-size:13px;
+}
+
+.day-name{
+  width:35px;
+  color:#666;
+}
+
+.h-bar-bg{
+  flex:1;
+  height:16px;
+  background:#f0f0f0;
+  border-radius:4px;
+  margin:0 12px;
+  overflow:hidden;
+}
+
+.h-bar-fill{
+  height:100%;
+  border-radius:4px;
+}
+
+.h-bar-fill.normal{
+  background:var(--verde);
+}
+
+.h-bar-fill.alto{
+  background:var(--dorado);
+}
+
+.h-bar-fill.saturado{
+  background:var(--rosado);
+}
+
+.row-status{
+  width:70px;
+  text-align:right;
+  font-weight:500;
+}
+
+.row-status.normal{
+  color:var(--verde);
+}
+
+.row-status.alto{
+  color:#d4a31c;
+}
+
+.row-status.saturado{
+  color:var(--rosado);
+}
+
+/* =====================================================
+   AGENDA DEL DÍA
+===================================================== */
+
+.agenda-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.agenda-item{
+  display:flex;
+  gap:15px;
+  font-size:14px;
+}
+
+.agenda-time{
+  width:50px;
+  font-weight:bold;
+  color:var(--verde);
+}
+
+.agenda-details h4{
+  margin:0;
+  font-size:14px;
+  font-weight:500;
+}
+
+.agenda-details span{
+  font-size:12px;
+  color:#777;
 }

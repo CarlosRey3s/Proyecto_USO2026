@@ -403,3 +403,291 @@ color: #222222; /* Verde clarito para el subtítulo */
 .na-btn-save.na-btn-save-mant:hover:not(:disabled) {
   background: #c73b3a;
 }
+
+/* ─────────────────────────────────────────────
+   BOTÓN: AÑADIR ÍTEM (MEJORADO PERO LIMPIO)
+───────────────────────────────────────────── */
+.inv-add-btn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: linear-gradient(135deg, #0f6e56, #0c5a47);
+  color: #ffffff;
+
+  border: none;
+  padding: 9px 14px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  box-shadow: 0 4px 10px rgba(15, 110, 86, 0.15);
+}
+
+/* hover */
+.inv-add-btn:hover {
+  background: linear-gradient(135deg, #0c5a47, #0a4a3a);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15, 110, 86, 0.25);
+}
+
+/* click */
+.inv-add-btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 3px 8px rgba(15, 110, 86, 0.15);
+}
+
+
+/* ─────────────────────────────────────────────
+   LISTA: EQUIPOS SELECCIONADOS
+───────────────────────────────────────────── */
+.inv-selected-list {
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* item seleccionado */
+.inv-selected-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  background: #f7faf9;
+  border: 1px solid #e3e8e6;
+
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.inv-selected-item:hover {
+  background: #eef6f3;
+  border-color: #cfe7de;
+}
+
+/* nombre */
+.inv-selected-nombre {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f2d2a;
+}
+
+
+/* ─────────────────────────────────────────────
+   BADGE (ESTILO “DISPONIBLE / STOCK” MEJORADO)
+───────────────────────────────────────────── */
+.inv-result-badge {
+  font-size: 11px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+
+  letter-spacing: 0.2px;
+}
+
+/* DISPONIBLE (verde limpio) */
+.inv-badge-ok {
+  background: #e7f7f1;
+  color: #0f6e56;
+  border: 1px solid #bfe8da;
+}
+
+/* STOCK BAJO (amarillo suave) */
+.inv-badge-lim {
+  background: #fff6e5;
+  color: #a36a00;
+  border: 1px solid #ffe0a3;
+}
+
+/* NO DISPONIBLE (rojo suave) */
+.inv-badge-no {
+  background: #ffecec;
+  color: #a33;
+  border: 1px solid #ffbdbd;
+}
+
+
+/* ─────────────────────────────────────────────
+   BOTÓN: QUITAR ITEM
+───────────────────────────────────────────── */
+.inv-quitar-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  color: #a33;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px;
+  border-radius: 6px;
+
+  transition: 0.2s;
+}
+
+.inv-quitar-btn:hover {
+  background: #ffecec;
+}
+
+
+/* ─────────────────────────────────────────────
+   DROPDOWN: RESULTADOS
+───────────────────────────────────────────── */
+.inv-results {
+  margin-top: 6px;
+  padding: 6px 0;
+  list-style: none;
+
+  background: white;
+  border: 1px solid #e3e8e6;
+  border-radius: 10px;
+
+  max-height: 180px;
+  overflow-y: auto;
+
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+/* item resultado */
+.inv-result-item {
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.inv-result-item:hover {
+  background: #f2f8f6;
+}
+
+.inv-result-nombre {
+  font-size: 13px;
+}
+
+
+
+/*******************/
+.inv-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eef6f3;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.inv-cantidad button {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: #0f6e56;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.inv-cantidad button:hover {
+  background: #0c5a47;
+}
+
+.inv-cantidad span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+
+.inv-selected-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px;
+  border-radius: 10px;
+
+  background: #f7faf9;
+  border: 1px solid #e3e8e6;
+}
+
+.inv-selected-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inv-selected-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.inv-cantidad-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.inv-cantidad-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+}
+
+.inv-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #eef6f3;
+  border: 1px solid #d8e8e2;
+
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.inv-cantidad button {
+  width: 26px;
+  height: 26px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #0f6e56;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.inv-cantidad span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+  color: #1f2d2a;
+}
+
+.inv-cantidad button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #b8c4c0;
+}

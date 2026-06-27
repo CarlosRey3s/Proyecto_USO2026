@@ -41,6 +41,7 @@ interface EquipoSeleccionado {
   id: string;
   nombre: string;
   disponibles: number;
+  cantidad?: number;
 }
 
 // Datos de ejemplo — reemplazar con llamada a API filtrada por lab + horario
@@ -146,25 +147,72 @@ export function ModalNuevaActividad({ onClose, onGuardar }: NuevaActividadProps)
       !equiposSeleccionados.find((s) => s.id === e.id)
   );
 
-  const agregarEquipo = (equipo: EquipoSeleccionado) => {
-    setForm((prev) => ({ ...prev, equipos: [...(prev.equipos || []), equipo] }));
-    setQuery("");
-    setShowResults(false);
-  };
+ const agregarEquipo = (equipo: EquipoSeleccionado) => {
+  setForm((prev) => ({
+    ...prev,
+    equipos: [
+      ...(prev.equipos || []),
+      { ...equipo, cantidad: 1 } //  aquí nace la cantidad
+    ]
+  }));
 
+  setQuery("");
+  setShowResults(false);
+};
   const quitarEquipo = (id: string) => {
-    setForm((prev) => ({ ...prev, equipos: (prev.equipos || []).filter((e) => e.id !== id) }));
-  };
-  // ─────────────────────
+  setForm((prev) => ({
+    ...prev,
+    equipos: (prev.equipos || []).filter((e) => e.id !== id)
+  }));
+};
 
-  const set = (field: keyof FormData, value: string | number) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
+const aumentarCantidad = (id: string) => {
+  setForm((prev) => ({
+    ...prev,
+    equipos: (prev.equipos || []).map((equipo) => {
+      if (equipo.id !== id) return equipo;
 
-  const handleLabChange = (val: string) => {
-    set("laboratorio", val);
-    set("estacion", "");
-  };
+      const cantidadActual = equipo.cantidad ?? 1;
 
+      return {
+        ...equipo,
+        cantidad:
+          cantidadActual < equipo.disponibles
+            ? cantidadActual + 1
+            : cantidadActual,
+      };
+    }),
+  }));
+};
+
+const disminuirCantidad = (id: string) => {
+  setForm((prev) => ({
+    ...prev,
+    equipos: (prev.equipos || []).map((equipo) => {
+      if (equipo.id !== id) return equipo;
+
+      const cantidadActual = equipo.cantidad ?? 1;
+
+      return {
+        ...equipo,
+        cantidad:
+          cantidadActual > 1
+            ? cantidadActual - 1
+            : 1,
+      };
+    }),
+  }));
+};
+
+// ─────────────────────
+
+const set = (field: keyof FormData, value: string | number) =>
+  setForm((prev) => ({ ...prev, [field]: value }));
+
+const handleLabChange = (val: string) => {
+  set("laboratorio", val);
+  set("estacion", "");
+};
   const handleTipo = (t: TipoActividad) => {
     setTipo(t);
     setForm({ tipo: t, numPersonas: t === "clase" ? 20 : 3, recurrencia: "No se repite", equipos: [],
@@ -390,70 +438,121 @@ export function ModalNuevaActividad({ onClose, onGuardar }: NuevaActividadProps)
               </div>
 
               {/* ── CAMPO DE INVENTARIO ── */}
-              <div className="na-sep" />
-              <div className="na-section-lbl">SOLICITAR INSTRUMENTO (OPCIONAL)</div>
-              <div className="na-field-group">
-                <div className="inv-search-wrapper">
-                  <Search size={14} className="inv-search-icon" />
-                  <input
-                    className="na-input inv-search-input"
-                    type="text"
-                    placeholder="Buscar equipo o activo..."
-                    value={query}
-                    onChange={(e) => { setQuery(e.target.value); setShowResults(true); }}
-                    onFocus={() => setShowResults(true)}
-                    onBlur={() => setTimeout(() => setShowResults(false), 150)}
-                  />
-                  {showResults && resultados.length > 0 && (
-                    <ul className="inv-results">
-                      {resultados.map((equipo) => (
-                        <li
-                          key={equipo.id}
-                          className="inv-result-item"
-                          onMouseDown={() => agregarEquipo(equipo)}
-                        >
-                          <span className="inv-result-nombre">{equipo.nombre}</span>
-                          <span className={`inv-result-badge ${badgeClass(equipo.disponibles)}`}>
-                            {badgeLabel(equipo.disponibles)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+<div className="na-sep" />
+<div className="na-section-lbl">SOLICITAR INSTRUMENTO (OPCIONAL)</div>
 
-                {/* Items seleccionados */}
-                {equiposSeleccionados.length > 0 && (
-                  <ul className="inv-selected-list">
-                    {equiposSeleccionados.map((equipo) => (
-                      <li key={equipo.id} className="inv-selected-item">
-                        <span className="inv-selected-nombre">{equipo.nombre}</span>
-                        <span className={`inv-result-badge ${badgeClass(equipo.disponibles)}`}>
-                          {badgeLabel(equipo.disponibles)}
-                        </span>
-                        <button
-                          className="inv-quitar-btn"
-                          type="button"
-                          onClick={() => quitarEquipo(equipo.id)}
-                          aria-label="Quitar"
-                        >
-                          <X size={14} />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+<div className="na-field-group">
+  <div className="inv-search-wrapper">
+    <Search size={14} className="inv-search-icon" />
 
-                <button
-                  className="inv-add-btn"
-                  type="button"
-                  onClick={() => setShowResults(true)}
-                >
-                  <Plus size={13} />
-                  Añadir ítem
-                </button>
-              </div>
-              {/* ── FIN CAMPO DE INVENTARIO ── */}
+    <input
+      className="na-input inv-search-input"
+      type="text"
+      placeholder="Buscar equipo o activo..."
+      value={query}
+      onChange={(e) => {
+        setQuery(e.target.value);
+        setShowResults(true);
+      }}
+      onFocus={() => setShowResults(true)}
+      onBlur={() => setTimeout(() => setShowResults(false), 150)}
+    />
+
+    {showResults && resultados.length > 0 && (
+      <ul className="inv-results">
+        {resultados.map((equipo) => (
+          <li
+            key={equipo.id}
+            className="inv-result-item"
+            onMouseDown={() => agregarEquipo(equipo)}
+          >
+            <span className="inv-result-nombre">
+              {equipo.nombre}
+            </span>
+
+            <span className={`inv-result-badge ${badgeClass(equipo.disponibles)}`}>
+              {badgeLabel(equipo.disponibles)}
+            </span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+{/* ITEMS SELECCIONADOS */}
+{equiposSeleccionados.length > 0 && (
+  <ul className="inv-selected-list">
+    {equiposSeleccionados.map((equipo) => (
+      <li key={equipo.id} className="inv-selected-item">
+
+        <div className="inv-selected-info">
+          <span className="inv-selected-nombre">
+            {equipo.nombre}
+          </span>
+
+          <span className={`inv-result-badge ${badgeClass(equipo.disponibles)}`}>
+            {badgeLabel(equipo.disponibles)}
+          </span>
+        </div>
+
+        <div className="inv-selected-actions">
+
+          <div className="inv-cantidad-wrapper">
+            <span className="inv-cantidad-label">
+              Cantidad
+            </span>
+
+            <div className="inv-cantidad">
+
+              <button
+                type="button"
+                onClick={() => disminuirCantidad(equipo.id)}
+                disabled={(equipo.cantidad || 1) <= 1}
+              >
+                −
+              </button>
+
+              <span>
+                {equipo.cantidad || 1}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => aumentarCantidad(equipo.id)}
+                disabled={(equipo.cantidad || 1) >= equipo.disponibles}
+              >
+                +
+              </button>
+
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="inv-quitar-btn"
+            onClick={() => quitarEquipo(equipo.id)}
+          >
+            <X size={14} />
+          </button>
+
+        </div>
+
+      </li>
+    ))}
+  </ul>
+)}
+
+<button
+  type="button"
+  className="inv-add-btn"
+  onClick={() => setShowResults(true)}
+>
+  <Plus size={13} />
+  Añadir ítem
+</button>
+</div>
+
+{/* ── FIN CAMPO DE INVENTARIO ── */}
 
               <div className="na-sep" />
               <div className="na-section-lbl">FECHA Y HORA</div>

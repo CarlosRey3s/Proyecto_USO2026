@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   LogOut,
   ChevronLeft,
+  MessageSquare,
 } from 'lucide-react';
 import '../../index.css';
 
@@ -20,12 +21,14 @@ interface SidebarProps {
 
 const menuItems = [
   { name: 'Dashboard',             path: '/dashboard',          icon: LayoutDashboard },
+  { name: 'Dashboard Docente', path: '/docente/dashboard', icon: LayoutDashboard, role: 'docente' },
   { name: 'Reservar',              path: '/reservas',           icon: BookOpen        },
   { name: 'Mis Evaluaciones',      path: '/evaluaciones',       icon: ClipboardList   },
   { name: 'Gestión Evaluaciones',  path: '/admin-evaluaciones', icon: ClipboardList   },
   { name: 'Calendario',            path: '/calendario',         icon: Calendar        },
   { name: 'Inventario',            path: '/inventario',         icon: Package         },
   { name: 'Dashboard Admin',       path: '/admin/dashboard',    icon: ShieldCheck     },
+  { name: 'Buzón Sugerencias',     path: '/buzon-sugerencias',  icon: MessageSquare         },
 ];
 
 export const Sidebar = ({
@@ -38,6 +41,7 @@ export const Sidebar = ({
 
   const isActive = (path: string) => {
     if (path === '/dashboard') return location.pathname === '/dashboard';
+    if (path === '/docente/dashboard') return location.pathname === '/docente/dashboard';
     return location.pathname.startsWith(path);
   };
 

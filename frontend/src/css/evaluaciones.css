@@ -7,317 +7,149 @@
   --blanco: #FFFFFF;
   --gris: #F4F6F8;
   --texto: #333;
+  --borde-acordeon: #C7B3B5; /* Tono grisáceo/rosado del borde original */
 }
 
-/* RESET */
-* {
-  box-sizing: border-box;
-}
-
-body, html {
-  margin: 0;
+/* ===== CONTENEDOR GENERAL ===== */
+.student-dashboard {
+  flex: 1;
+  padding: 24px;
+  background: #EAEAEA; /* Fondo gris claro de la sección interna */
+  border-radius: 16px 16px 0 0;
+  margin: 10px;
   font-family: Arial, sans-serif;
-  background: var(--gris);
-  color: var(--texto);
 }
 
-/* ================= LAYOUT ================= */
-.container {
-  display: flex;
-  height: 100vh;
-}
-
-/* ================= SIDEBAR ================= */
-.sidebar {
-  width: 220px;
-  background: var(--blanco);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-right: 1px solid #eee;
-}
-
-.menu {
-  padding: 20px;
-}
-
-.sidebar h3 {
+.section-main-title {
+  font-size: 18px;
+  color: #2c2c2c;
+  margin-top: 0;
   margin-bottom: 20px;
-  color: var(--texto);
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #000;
-  transition: 0.2s;
-}
-
-.sidebar li.active {
-  background: var(--dorado);
-  color: #000;
   font-weight: bold;
 }
 
-.sidebar li:hover {
-  background: #f1f1f1;
-  color: #000;
+/* ===== BLOQUES DE CATEGORÍA ===== */
+.category-block {
+  margin-bottom: 30px;
 }
 
-.sidebar-bottom {
-  padding: 15px;
-  font-size: 14px;
-  color: #777;
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
-/* ================= CONTENT ================= */
-.content {
-  flex: 1;
+.category-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 0.5px;
+}
+
+/* Cuadrado verde al lado del título */
+.checkbox-icon {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--verde);
+  border-radius: 6px;
+  background: var(--blanco);
+  display: inline-block;
+}
+
+/* ===== ACORDEONES (LISTA) ===== */
+.accordion-list {
   display: flex;
   flex-direction: column;
-  background: transparent; /* 👈 IMPORTANTE */
+  gap: 14px;
 }
 
-/* ================= NAVBAR ================= */
-.navbar {
-  background: var(--blanco);
-  padding: 12px 20px;
+.accordion-item {
+  background: #F5F5F5;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* Estado Cerrado */
+.accordion-item.closed {
+  border: 1.5px solid var(--borde-acordeon);
+}
+
+/* Estado Abierto (Borde e indicador Dorado) */
+.accordion-item.open {
+  border: 2px solid var(--dorado);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Encabezado del Acordeón */
+.accordion-summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 14px 20px;
+  background: #F5F5F5;
 }
 
-.navbar h2 {
-  margin: 0;
-  color: #000;
-}
-
-/* SEARCH */
-.search-box {
-  padding: 7px 15px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-  outline: none;
-}
-
-/* ================= MAIN (SIN CUADRO CENTRAL) ================= */
-.main {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background: transparent;
-}
-
-/* ================= SCHEDULE ================= */
-.schedule {
-  flex: 3;
-  background: transparent;
-}
-
-/* TARJETAS HORARIO */
-.schedule-card {
+.summary-left {
   display: flex;
   align-items: center;
   gap: 15px;
-
-  background: var(--blanco);
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-
-  border: 1px solid #eee;
-  transition: 0.2s;
 }
 
-.schedule-card:hover {
-  transform: translateY(-2px);
-  border-left: 4px solid var(--dorado);
-  box-shadow: 0 10px 20px rgba(250, 203, 75, 0.15);
+/* Iconos circulares (Microscopio / Carpeta) */
+.icon-lab {
+  font-size: 16px;
+  opacity: 0.7;
 }
 
-/* HORA */
-.time {
-  background: var(--blanco);
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--rosado);
-  font-weight: bold;
-  color: var(--verde);
+.label-type {
+  font-size: 14px;
+  color: #444;
+  padding-right: 15px;
+  border-right: 1px solid #ccc; /* Línea divisoria vertical interna */
 }
 
-/* ================= RIGHT PANEL ================= */
-.right-panel {
-  flex: 1;
-  background: transparent;
+.label-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
 }
 
-/* CARD EVALUACIONES */
-.card {
-  background: var(--blanco);
-  padding: 15px;
-  border-radius: 10px;
-  border-left: 4px solid var(--verde);
+/* Flechas arriba/abajo */
+.arrow-icon {
+  font-size: 14px;
+  color: #666;
 }
 
-.card:hover {
-  border-left: 4px solid var(--dorado);
-}
-
-.alert {
-  margin-top: 10px;
-}
-
-.alert p {
-  margin: 0;
-  color: #000;
-}
-
-.red {
-  color: var(--rosado);
-  font-weight: bold;
-}
-
-/* ================= TABS ================= */
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.tab {
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: #eee;
-  cursor: pointer;
-  color: var(--verde);
-}
-
-.tab.active {
-  background: var(--verde);
-  color: white;
-}
-
-.tab:hover {
-  background: var(--dorado);
-  color: #000;
-}
-
-/* ================= LABS ================= */
-.labs {
-  flex: 3;
-  background: transparent;
-  padding: 0;
-}
-
-/* TÍTULO */
-.labs h2 {
-  color: #000;
-  margin-bottom: 15px;
-}
-
-/* LAB CARDS */
-.lab-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-
-  background: var(--blanco);
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 12px;
-
-  border: 1px solid #eee;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.lab-card:hover {
-  transform: translateY(-2px);
-  border-left: 4px solid var(--dorado);
-  box-shadow: 0 10px 20px rgba(250, 203, 75, 0.15);
-}
-
-.lab-card h3 {
-  margin: 0;
-  color: #000;
-  font-size: 15px;
-}
-
-/* ================= RESERVAS ================= */
-.reservas-panel {
-  flex: 1;
+/* ===== CONTENIDO DESPLEGADO ===== */
+.accordion-content {
+  background: #F5F5F5;
+  padding: 0 20px 20px 54px; /* Alineado con el inicio del texto superior */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
 }
 
-/* RESERVA CARD */
-.reserva-card {
-  background: var(--blanco);
-  padding: 12px 15px;
-  border-radius: 10px;
-  border: 1px solid #eee;
-  transition: 0.2s;
-  cursor: pointer;
-}
-
-.reserva-card:hover {
-  transform: translateY(-2px);
-  border-left: 4px solid var(--dorado);
-}
-
-.reserva-card h4 {
-  margin: 0;
+.info-group h4 {
+  margin: 0 0 6px 0;
   font-size: 14px;
-  color: #000;
+  font-weight: bold;
+  color: #333;
 }
 
-.reserva-card p {
-  margin: 2px 0;
-  font-size: 13px;
+.info-group p {
+  margin: 3px 0;
+  font-size: 13.5px;
   color: #555;
 }
 
-.reserva-card .fecha {
-  color: var(--rosado);
-  font-weight: bold;
+.details-section {
+  margin-top: 5px;
 }
 
-/* ================= EVALUACIONES ================= */
-.evaluacion-card {
-  background: var(--blanco);
-  padding: 12px 15px;
-  border-radius: 10px;
-  border: 1px solid #eee;
-  transition: 0.2s;
-  cursor: pointer;
-}
-
-.evaluacion-card:hover {
-  transform: translateX(6px);
-  border-left: 4px solid var(--dorado);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.06);
-}
-
-.evaluacion-card h4 {
-  margin: 0;
-  font-size: 14px;
-  color: #000;
-}
-
-.evaluacion-card p {
-  margin: 2px 0;
-  font-size: 13px;
-  color: #555;
-}
-
-.evaluacion-card .fecha {
-  color: var(--rosado);
-  font-weight: bold;
+.status-active {
+  color: #2b2b2b;
+  font-weight: 500;
 }
